@@ -1,0 +1,65 @@
+---
+// src/components/FaqAccordion.astro
+// Reusable FAQ accordion component
+export interface Props {
+    faqs?: { question: string; answer: string }[];
+    title?: string;
+}
+const { faqs, title = "Frequently Asked Questions" } = Astro.props;
+---
+
+{faqs && faqs.length > 0 && (
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-12">{title}</h2>
+        <div class="max-w-3xl mx-auto space-y-4">
+            {faqs.map((faq, index) => (
+                <div class="bg-gray-50 rounded-lg shadow-sm faq-item">
+                    <button 
+                        class="faq-question w-full flex justify-between items-center text-left px-6 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary rounded-lg" 
+                        aria-expanded="false" 
+                        aria-controls={`faq-answer-${index}`}
+                    >
+                        <span class="text-lg font-semibold text-[var(--text-primary)]">{faq.question}</span>
+                        <i class="faq-icon fas fa-chevron-down transition-transform duration-300 transform"></i>
+                    </button>
+                    <div 
+                        id={`faq-answer-${index}`} 
+                        class="faq-answer px-6 pb-4 text-[var(--text-secondary)] prose max-w-none hidden" 
+                        role="region"
+                        aria-hidden="true"
+                    >
+                        <p>{faq.answer}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
+        
+        {/* Add script directly here for simplicity in this component */}
+        <script>
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const button = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const icon = button?.querySelector('.faq-icon');
+
+                button?.addEventListener('click', () => {
+                    const isOpening = answer?.classList.contains('hidden');
+                    
+                    answer?.classList.toggle('hidden');
+                    button.setAttribute('aria-expanded', isOpening ? 'true' : 'false');
+                    answer?.setAttribute('aria-hidden', isOpening ? 'false' : 'true');
+                    icon?.classList.toggle('rotate-180', isOpening); // Use Tailwind's rotate class
+
+                    // Optional: Close others when one opens
+                    // document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    //     if (otherItem !== item) {
+                    //         otherItem.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+                    //         otherItem.querySelector('.faq-answer')?.classList.add('hidden');
+                    //         otherItem.querySelector('.faq-answer')?.setAttribute('aria-hidden', 'true');
+                    //         otherItem.querySelector('.faq-icon')?.classList.remove('rotate-180');
+                    //     }
+                    // });
+                });
+            });
+        </script>
+    </div>
+)}
