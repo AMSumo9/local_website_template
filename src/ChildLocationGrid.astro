@@ -1,0 +1,57 @@
+---
+// src/components/ChildLocationGrid.astro
+// Fetches and displays child locations based on the current page's URL
+export interface Props {
+    currentUrl: string; // e.g., /locations/victoria/bendigo/
+    siteBase?: string;  // e.g., / or /subdir/
+    city?: string;      // e.g., Bendigo
+}
+const { currentUrl, siteBase = '/', city = 'the region' } = Astro.props;
+
+// Fetch all location pages. Astro.glob imports markdown/astro files.
+// Adjust the glob pattern based on where your location markdown files live.
+// Assume they are in src/content/locations/ and use Astro's content collections.
+import { getCollection } from 'astro:content'; 
+const allLocations = await getCollection('locations'); // Assumes a 'locations' collection
+
+const currentPath = currentUrl.endsWith('/') ? currentUrl : `${currentUrl}/`;
+const currentDepth = (currentPath.match(/\//g) || []).length;
+const childLocations = allLocations.filter(location => {
+    if (!location.slug) return false; // Ensure slug exists
+    // Construct the full URL path from the slug relative to the content collection
+    // This logic might need adjustment based on your exact URL structure/routing
+    const locationPath = `/locations/${location.slug}/`; // Example path construction
+    const locationDepth = (locationPath.match(/\//g) || []).length;
+
+    // Check if it starts with current path, is not the same, and is one level deeper
+    return locationPath.startsWith(currentPath) &&
+           locationPath !== currentPath &&
+           locationDepth === currentDepth + 1;
+});
+
+// Sort alphabetically by city name (or title)
+childLocations.sort((a, b) => (a.data.city_name || a.data.title).localeCompare(b.data.city_name || b.data.title));
+
+---
+{childLocations.length > 0 && (
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-4">
+            Areas We Service in <span class="text-brand-primary">{city}</span>
+        </h2>
+        <p class="text-lg text-[var(--text-secondary)] max-w-3xl mx-auto mb-12 text-center">
+            Our network of brokers covers the entire {city} region. Below are some of the key areas with dedicated information.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {childLocations.map(location => (
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 text-center">
+                    {/* Construct the href carefully. Astro content collections often generate slug-based URLs */}
+                    {/* Adjust '/locations/' prefix if needed based on your routing */}
+                    <a href={`/locations/${location.slug}/`} 
+                       class="font-semibold text-brand-primary hover:text-brand-primary-dark block text-lg">
+                       {location.data.city_name || location.data.title} {/* Use city_name first */}
+                    </a>
+                </div>
+            ))}
+        </div>
+    </div>
+)}
