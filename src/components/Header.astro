@@ -1,0 +1,79 @@
+---
+// src/components/Header.astro
+const { siteData } = Astro.props;
+
+const companyName = siteData?.company?.name || '[Company Name]';
+const logoUrl = siteData?.technical?.logo_url;
+const industryIcon = siteData?.industry?.icon || 'fas fa-building'; // Default icon
+const phoneTel = `tel:${siteData?.contact?.nap?.phone_raw || '#'}`;
+const ctaSecondary = siteData?.cta?.secondary || 'Speak to an Expert';
+const navigation = siteData?.navigation?.main || [];
+---
+<header class="bg-white shadow-md sticky top-0 z-40">
+  <div class="container mx-auto px-6">
+    <div class="flex items-center justify-between h-20">
+      
+      <!-- Logo (with fallback) -->
+      <a href="/" class="flex items-center space-x-3" aria-label="Home">
+        { logoUrl ? (
+          <img src={logoUrl} alt={`${companyName} Logo`} class="h-10" />
+        ) : (
+          <i class:list={[industryIcon, "text-brand-primary"]} style="font-size: 2.5rem;"></i>
+        )}
+        <span class="text-xl font-bold text-gray-800 font-poppins">{companyName}</span>
+      </a>
+
+      <!-- Desktop Navigation & CTAs -->
+      <nav class="hidden lg:flex items-center space-x-6" role="navigation" aria-label="Main navigation">
+        <ul class="flex space-x-6">
+          {navigation.map((item) => (
+            <li><a href={item.url} class="text-gray-700 hover:text-brand-primary transition duration-200 font-medium text-base">{item.name}</a></li>
+          ))}
+        </ul>
+        
+        <a href={phoneTel} 
+           class="flex items-center px-4 py-2 text-gray-700 font-semibold rounded-lg hover:text-brand-primary transition duration-200 text-base">
+          <i class="fas fa-phone mr-2" aria-hidden="true"></i>
+          <span>{ctaSecondary}</span>
+        </a>
+        
+        <button onclick="openSupportModal()" 
+                class="px-5 py-2 bg-brand-primary text-white font-semibold rounded-lg shadow-md hover:bg-brand-primary-dark transition duration-200 text-base"
+                type="button">
+          <i class="fas fa-edit mr-2"></i>
+          Submit Inquiry
+        </button>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <div class="lg:hidden flex items-center">
+        <button id="mobile-menu-button" class="text-gray-800 hover:text-brand-primary focus:outline-none" aria-label="Open mobile menu" type="button">
+          <span class="text-lg font-semibold mr-2">Menu</span>
+          <i class="fas fa-bars text-xl" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile Menu (collapsible) -->
+  <nav id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-200 absolute w-full shadow-lg" role="navigation">
+    <div class="px-6 py-4 space-y-4">
+      <ul class="space-y-4">
+        {navigation.map((item) => (
+           <li><a href={item.url} class="block text-gray-700 hover:text-brand-primary font-medium text-lg py-2">{item.name}</a></li>
+        ))}
+      </ul>
+      <button onclick="openSupportModal()" 
+              class="w-full px-6 py-3 bg-brand-primary text-white font-semibold rounded-lg shadow-md hover:bg-brand-primary-dark transition duration-200 text-lg"
+              type="button">
+        <i class="fas fa-edit mr-2"></i>
+        Submit Inquiry
+      </button>
+      <a href={phoneTel} 
+           class="flex items-center justify-center w-full px-4 py-3 text-gray-700 font-semibold rounded-lg hover:text-brand-primary transition duration-200 text-base bg-gray-100">
+          <i class="fas fa-phone mr-2" aria-hidden="true"></i>
+          <span>{ctaSecondary}</span>
+        </a>
+    </div>
+  </nav>
+</header>
