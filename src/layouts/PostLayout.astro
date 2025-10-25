@@ -1,0 +1,156 @@
+---
+// src/layouts/PostLayout.astro (Based on posts.html)
+import BaseLayout from './BaseLayout.astro';
+import { Image } from 'astro:assets';
+// Placeholder for image logic
+import defaultPostImage from '../assets/images/blog/default.png'; 
+
+export interface Props {
+	frontmatter: {
+		title: string;
+		meta_description: string;
+		date: string; // Expects YYYY-MM-DD format
+		author?: string;
+		featured_image?: string; // Expects filename in /src/assets/images/blog/
+        featured_image_alt?: string;
+		tags?: string[];
+        // Add meta_keywords etc. if needed
+	};
+    siteData: Record<string, any>;
+}
+
+const { frontmatter, siteData } = Astro.props;
+const pageData = { ...frontmatter, layout: 'posts' }; // Hint for Seo.astro
+
+// Format date for display
+const displayDate = new Date(frontmatter.date).toLocaleDateString('en-AU', {
+	year: 'numeric', month: 'long', day: 'numeric'
+});
+const authorName = frontmatter.author || siteData.persona?.expert_name || siteData.company.name;
+
+// --- Image Logic ---
+// Simplified: Use featured_image if provided, otherwise default.
+const imageUrl = frontmatter.featured_image
+	? `/src/assets/images/blog/${frontmatter.featured_image}` // Needs proper Astro asset handling
+    : defaultPostImage;
+const imageAlt = frontmatter.featured_image_alt || frontmatter.title;
+
+// TODO: Fetch recent posts dynamically
+const recentPosts = [
+    { url: '#', title: 'Recent Post 1', date: '2025-10-24' },
+    { url: '#', title: 'Recent Post 2', date: '2025-10-20' },
+    { url: '#', title: 'Recent Post 3', date: '2025-10-15' },
+];
+---
+<BaseLayout siteData={siteData} pageData={pageData}>
+
+	<!-- Post Header -->
+	<section class="bg-brand-accent">
+		<div class="container mx-auto px-6 py-16 text-center">
+			<h1 class="text-4xl font-extrabold text-[var(--text-primary)] mb-4">{frontmatter.title}</h1>
+			<div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-[var(--text-secondary)]">
+				<span class="flex items-center">
+					<i class="fas fa-calendar mr-2"></i>
+					<time datetime={frontmatter.date}>{displayDate}</time>
+				</span>
+				<span class="flex items-center">
+					<i class="fas fa-user mr-2"></i>
+					{authorName}
+				</span>
+				<!-- Add read time calculation later if needed -->
+			</div>
+		</div>
+	</section>
+
+	<!-- Main Content Section -->
+	<section class="py-16 bg-white">
+		<div class="container mx-auto px-6">
+			<div class="max-w-4xl mx-auto">
+				<div class="grid lg:grid-cols-5 gap-12">
+					
+                    <!-- Post Content -->
+                    <div class="lg:col-span-3">
+						<article class="prose lg:prose-lg max-w-none text-[var(--text-primary)] prose-headings:text-[var(--text-primary)] prose-a:text-brand-primary hover:prose-a:text-brand-primary-dark">
+							 {frontmatter.featured_image && (
+                                <img src={`/assets/images/blog/${frontmatter.featured_image}`} 
+                                     alt={imageAlt} 
+                                     class="float-left mr-6 mb-4 max-w-[300px] rounded-lg shadow-md not-prose" 
+                                     loading="lazy" />
+                                {/* Use <Image> component when asset paths are finalized */}
+                             )}
+							<slot /> <!-- Blog post markdown content -->
+						</article>
+						
+						{frontmatter.tags && frontmatter.tags.length > 0 && (
+						<div class="mt-8 pt-6 border-t border-gray-200">
+							<h3 class="text-lg font-semibold mb-3 text-[var(--text-primary)]">Tags</h3>
+							<div class="flex flex-wrap gap-2">
+								{frontmatter.tags.map(tag => (
+									<span class="bg-brand-accent text-gray-800 px-3 py-1 rounded-full text-sm">
+										{tag}
+									</span>
+								))}
+							</div>
+						</div>
+						)}
+						
+						<!-- Share Buttons (Add JS for dynamic URLs later if needed) -->
+						<div class="mt-8 pt-6 border-t border-gray-200">
+							<h3 class="text-lg font-semibold mb-4 text-[var(--text-primary)]">Share this article</h3>
+							<div class="flex flex-wrap gap-2">
+								<a href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url.href}`} target="_blank" class="flex items-center px-4 py-2 rounded-lg text-gray-800 hover:opacity-80 transition duration-200 bg-brand-accent">
+									<i class="fab fa-facebook-f mr-2 text-brand-primary"></i> Facebook
+								</a>
+								<a href={`https://twitter.com/intent/tweet?url=${Astro.url.href}&text=${encodeURIComponent(frontmatter.title)}`} target="_blank" class="flex items-center px-4 py-2 rounded-lg text-gray-800 hover:opacity-80 transition duration-200 bg-brand-accent">
+									<i class="fab fa-twitter mr-2 text-brand-primary"></i> Twitter
+								</a>
+								<a href={`https://www.linkedin.com/sharing/share-offsite/?url=${Astro.url.href}`} target="_blank" class="flex items-center px-4 py-2 rounded-lg text-gray-800 hover:opacity-80 transition duration-200 bg-brand-accent">
+									<i class="fab fa-linkedin mr-2 text-brand-primary"></i> LinkedIn
+								</a>
+							</div>
+						</div>
+					</div>
+					
+                    <!-- Sidebar -->
+					<aside class="lg:col-span-2">
+						<div class="sticky top-24 space-y-6"> {/* Adjust top offset based on header height */}
+							<div class="bg-gray-50 p-6 rounded-lg shadow-md">
+								<h3 class="text-xl font-bold mb-4 text-[var(--text-primary)]">Need Help?</h3>
+								<p class="text-[var(--text-secondary)] mb-4">
+									Have questions about finance? Our expert team is here to help.
+								</p>
+								<div class="flex flex-col gap-3">
+									<button onclick="openSupportModal()" class="block w-full text-center px-4 py-3 rounded-lg font-bold transition duration-300 bg-brand-primary text-white hover:bg-brand-primary-dark">
+										<i class="fas fa-edit mr-2"></i>
+										Get A Quote
+									</button>
+									<a href={`tel:${siteData.contact.nap.phone_raw}`} class="block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-300 text-gray-800 bg-brand-accent hover:opacity-80">
+										<i class="fas fa-phone mr-2"></i>
+										Speak to an Expert
+									</a>
+								</div>
+							</div>
+							
+							<div class="bg-gray-50 p-6 rounded-lg shadow-md">
+								<h3 class="text-xl font-bold mb-4 text-[var(--text-primary)]">Recent Articles</h3>
+								<div class="space-y-4">
+									{recentPosts.map(post => (
+										<a href={post.url} class="block group">
+											<h4 class="font-semibold text-[var(--text-primary)] group-hover:text-brand-primary transition duration-200">
+												{post.title}
+											</h4>
+											<p class="text-sm text-[var(--text-secondary)] mt-1">
+                                                {new Date(post.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}
+											</p>
+										</a>
+									))}
+								</div>
+							</div>
+						</div>
+					</aside>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
