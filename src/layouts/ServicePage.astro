@@ -1,0 +1,104 @@
+---
+// src/layouts/ServicePage.astro (Based on services.html)
+import BaseLayout from './BaseLayout.astro';
+import { Image } from 'astro:assets';
+// Placeholder for image logic
+import defaultServiceImage from '../assets/images/hero/default-service.png';
+
+export interface Props {
+	frontmatter: {
+		title: string;
+		meta_description: string;
+		subtitle?: string;
+		excerpt?: string;
+		hero_highlight?: string;
+		hero_image?: string; // Expects filename in /src/assets/images/hero/
+		service_type?: string; // Used for Schema.org
+		key_benefits?: { icon: string; title: string; description: string }[];
+		features_title?: string;
+        // Add meta_keywords etc. if needed
+	};
+    siteData: Record<string, any>;
+}
+
+const { frontmatter, siteData } = Astro.props;
+const pageData = { ...frontmatter, layout: 'services' }; // Hint for Seo.astro
+
+// --- Image Logic ---
+// Simplified: Use hero_image if provided, otherwise default.
+// TODO: Add proper image path resolution and optimization
+const imageUrl = frontmatter.hero_image 
+    ? `/src/assets/images/hero/${frontmatter.hero_image}` // This needs Astro's asset handling
+    : defaultServiceImage; // Fallback to imported default
+const imageAlt = `${frontmatter.title.split(' | ')[0]} illustration`;
+
+// Clean title for display
+const displayTitle = frontmatter.title.replace(` | ${siteData.company.name}`, '');
+---
+<BaseLayout siteData={siteData} pageData={pageData}>
+
+	<!-- Hero Section -->
+	<section class="bg-brand-accent">
+		<div class="container mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
+			<div>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] mb-4" set:html={
+                    frontmatter.hero_highlight
+                        ? displayTitle.replace(frontmatter.hero_highlight, `<span class="text-brand-primary">${frontmatter.hero_highlight}</span>`)
+                        : displayTitle
+                } />
+				
+				{frontmatter.subtitle && <p class="text-xl text-[var(--text-secondary)] mb-6">{frontmatter.subtitle}</p>}
+				{frontmatter.excerpt && <p class="text-lg text-[var(--text-secondary)] mb-6">{frontmatter.excerpt}</p>}
+				
+				<button onclick="openSupportModal()" class="inline-block bg-brand-primary text-white font-bold text-lg px-8 py-4 rounded-lg shadow-xl hover:bg-brand-primary-dark transition duration-300">
+					{siteData.cta.primary || 'Start Your Comparison'}
+				</button>
+			</div>
+			<div>
+                {/* NOTE: Using basic img tag for simplicity with current path logic. 
+                     Switch to <Image> component when asset handling is refined. */}
+                <img src={frontmatter.hero_image ? `/assets/images/hero/${frontmatter.hero_image}` : '/assets/images/hero/default-service.png'} 
+                     alt={imageAlt} 
+                     class="rounded-lg shadow-2xl w-full h-auto aspect-[4/3] object-cover" 
+                     loading="lazy" />
+				{/* <Image src={imageUrl} alt={imageAlt} class="rounded-lg shadow-2xl w-full h-auto aspect-[4/3] object-cover" /> */}
+			</div>
+		</div>
+	</section>
+
+	<!-- Features & Benefits Section -->
+	{frontmatter.key_benefits && frontmatter.key_benefits.length > 0 && (
+		<section class="py-20 bg-white">
+			<div class="container mx-auto px-6">
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-[var(--text-primary)]">
+						{frontmatter.features_title || `The Smarter Way to ${frontmatter.service_type || 'Get Your Loan'}`}
+					</h2>
+					<p class="mt-2 text-lg text-[var(--text-secondary)]">Discover the features and benefits.</p>
+				</div>
+				
+				<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+					{frontmatter.key_benefits.map(benefit => (
+						<div class="bg-gray-50 p-6 rounded-lg shadow-md">
+							{benefit.icon && <i class:list={[benefit.icon, "text-4xl text-brand-primary mb-4"]}></i>}
+							<h3 class="text-xl font-semibold mb-2 text-[var(--text-primary)]">{benefit.title}</h3>
+							<p class="text-[var(--text-secondary)]">{benefit.description}</p>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+	)}
+
+	<!-- Markdown Content Section -->
+	<section class="py-10 md:py-20 bg-white">
+		<div class="container mx-auto px-6">
+			<article class="prose lg:prose-lg max-w-4xl mx-auto text-[var(--text-primary)] prose-headings:text-[var(--text-primary)] prose-a:text-brand-primary hover:prose-a:text-brand-primary-dark">
+				<slot /> <!-- Markdown content from the .md file goes here -->
+			</article>
+		</div>
+	</section>
+
+    <!-- TODO: Add Service Index specific layout if needed -->
+
+</BaseLayout>
