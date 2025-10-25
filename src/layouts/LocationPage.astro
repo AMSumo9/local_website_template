@@ -1,0 +1,148 @@
+---
+// src/layouts/LocationPage.astro (Based on locations_v2.html)
+import BaseLayout from './BaseLayout.astro';
+import ChildLocationGrid from '../components/ChildLocationGrid.astro'; // Assumes component exists
+import FaqAccordion from '../components/FaqAccordion.astro'; // Reusable FAQ component
+import { Image } from 'astro:assets';
+// Placeholder for image logic - replace with actual dynamic image loading later
+import defaultLocationImage from '../assets/images/locations/default.png';
+
+export interface Props {
+	// Frontmatter from the specific location markdown file (e.g., bendigo.md)
+	frontmatter: {
+		title: string;
+		meta_description: string;
+		city_name: string;
+		subtitle?: string;
+		geo_lat?: string;
+		geo_long?: string;
+		area_served?: { name: string; postcode: string }[];
+		key_benefits?: { icon: string; title: string; description: string }[];
+		property_insights?: { label: string; value: string; source?: string }[];
+		faqs?: { question: string; answer: string }[];
+		last_updated?: string;
+        is_hub?: boolean;
+        // Add image fields if needed, e.g., hero_image: string;
+	};
+    // Site-wide data passed down from the build process
+    siteData: Record<string, any>;
+}
+
+const { frontmatter, siteData } = Astro.props;
+const pageData = { ...frontmatter, layout: 'locations_v2' }; // Add layout hint for Seo.astro
+
+// --- Image Logic ---
+// Simplified: Use a default image for now.
+// TODO: Implement dynamic checking for slug.png, slug.svg etc.
+const imageUrl = defaultLocationImage;
+const imageAlt = `Find a ${siteData.industry.serviceName} broker in ${frontmatter.city_name}`;
+
+// Format last updated date
+const lastUpdatedDate = frontmatter.last_updated
+    ? new Date(frontmatter.last_updated).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })
+    : null;
+---
+<BaseLayout siteData={siteData} pageData={pageData}>
+
+	<!-- Hero Section -->
+	<section class="bg-brand-accent">
+		<div class="container mx-auto px-6 py-16 text-center">
+			<h1 class="text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] mb-4">
+				Find {siteData.industry.serviceName} Brokers in <span class="text-brand-primary">{frontmatter.city_name}</span>
+			</h1>
+			{frontmatter.subtitle && (
+				<p class="text-lg md:text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">{frontmatter.subtitle}</p>
+			)}
+			<!-- TODO: Add dynamic breadcrumbs component -->
+		</div>
+	</section>
+
+	<!-- Main Content Section -->
+	<section class="py-16 md:py-20 bg-white">
+		<div class="container mx-auto px-6">
+			<div class="max-w-6xl mx-auto">
+
+				<div class="grid md:grid-cols-2 gap-x-12 gap-y-10 mb-16">
+					<div class="self-start">
+						<Image src={imageUrl} alt={imageAlt} class="w-full h-auto rounded-lg shadow-xl object-cover aspect-[4/3]" />
+					</div>
+					<div class="self-start">
+						<h2 class="text-3xl font-bold text-[var(--text-primary)] mb-6">
+							{siteData.industry.serviceName} Brokers Servicing the <span class="text-brand-primary">{frontmatter.city_name}</span> Area
+						</h2>
+						<article class="prose max-w-none text-[var(--text-secondary)]">
+							<slot /> <!-- Markdown content goes here -->
+						</article>
+					</div>
+				</div>
+
+				<!-- Child Location Grid (Only if is_hub) -->
+				{frontmatter.is_hub && <ChildLocationGrid currentUrl={Astro.url.pathname} siteBase={Astro.site?.pathname || '/'} city={frontmatter.city_name} />}
+
+                <!-- Key Benefits -->
+				{frontmatter.key_benefits && frontmatter.key_benefits.length > 0 && (
+					<div class="mb-16">
+						<h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-12">
+							Why Choose Us in <span class="text-brand-primary">{frontmatter.city_name}</span>
+						</h2>
+						<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+							{frontmatter.key_benefits.map(benefit => (
+								<div class="bg-gray-50 p-6 rounded-lg shadow-md">
+									{benefit.icon && <i class:list={[benefit.icon, "text-4xl text-brand-primary mb-4"]}></i>}
+									<h3 class="text-xl font-semibold mb-2 text-[var(--text-primary)]">{benefit.title}</h3>
+									<p class="text-[var(--text-secondary)]">{benefit.description}</p>
+								</div>
+							))}
+						</div>
+					</div>
+				)}
+
+				<!-- Property Insights -->
+				{frontmatter.property_insights && frontmatter.property_insights.length > 0 && (
+					<div class="mb-16">
+						<h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-4">
+							{frontmatter.city_name} Property Market Insights
+						</h2>
+						{lastUpdatedDate && (
+							<p class="text-center text-sm text-[var(--text-secondary)] italic mb-8">
+								Market data last updated on {lastUpdatedDate}.
+							</p>
+						)}
+						<div class="bg-gray-50 rounded-lg shadow-md p-6">
+							<dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+								{frontmatter.property_insights.map(insight => (
+									<div class="flex flex-col">
+										<dt class="text-sm font-medium text-[var(--text-secondary)]">{insight.label}</dt>
+										<dd class="text-lg font-semibold text-[var(--text-primary)]">
+											{insight.value}
+											{insight.source && <span class="text-xs font-normal text-gray-400 block">Source: {insight.source}</span>}
+										</dd>
+									</div>
+								))}
+							</dl>
+						</div>
+					</div>
+				)}
+
+				<!-- FAQs -->
+                <FaqAccordion faqs={frontmatter.faqs} />
+
+
+				<!-- Final CTA -->
+				<div class="bg-brand-accent rounded-lg shadow-lg p-8 mt-20 text-center">
+					<h2 class="text-3xl font-bold text-brand-primary mb-4">{siteData.cta.primary}</h2>
+					<p class="text-lg text-[var(--text-secondary)] mb-6">Get personalised advice from our expert brokers today. It's free and there's no obligation.</p>
+					<div class="space-y-4 md:space-y-0 md:space-x-4 md:flex md:justify-center">
+						<a href={`tel:${siteData.contact.nap.phone_raw}`} class="inline-flex items-center justify-center text-gray-800 px-6 py-3 rounded-lg font-semibold transition duration-300 bg-white hover:opacity-80 shadow-sm">
+						   <i class="fas fa-phone mr-2"></i> {siteData.cta.secondary}
+						</a>
+						<button onclick="openSupportModal()" class="inline-flex items-center justify-center text-gray-800 px-6 py-3 rounded-lg font-semibold transition duration-300 bg-white hover:opacity-80 shadow-sm">
+						   <i class="fas fa-edit mr-2"></i> Submit Inquiry
+						</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+</BaseLayout>
