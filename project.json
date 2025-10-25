@@ -1,0 +1,87 @@
+{
+  "company": {
+    "name": "Bendigo Finance Experts",
+    "tagline": "Your local experts in home, business, and equipment finance.",
+    "legal_notice": "Bendigo Finance Experts (ACN 123 456 789) is a Corporate Authorised Representative (No. 98765) of Australian Finance Group Ltd (Australian Credit Licence No. 389087)."
+  },
+  "industry": {
+    "name": "FinancialServices",
+    "schemaType": "FinancialService",
+    "serviceName": "Mortgage Broker",
+    "icon": "fas fa-house-chimney" 
+  },
+  "persona": {
+    "expert_name": "John Smith",
+    "expert_title": "Principal Finance Broker (20+ Years Experience)",
+    "expert_bio": "John Smith is a 20-year veteran of the finance industry, fully licensed (MFAA Member #12345) and dedicated to serving the Bendigo community. He specializes in complex lending scenarios and helping first-home buyers navigate the market.",
+    "trust_badges": [
+      "MFAA Member #12345",
+      "ACL No. 389087",
+      "20+ Years Experience",
+      "Local Bendigo Specialist"
+    ]
+  },
+  "technical": {
+    "domain": "https://financebendigo.com.au",
+    "logo_url": "", // Intentionally blank to test icon fallback
+    "lead_form_url": "https://webhook.your-ghl-or-n8n.com/new-lead", 
+    "ga_tracking_id": "G-XXXXXXXXXX" 
+  },
+  "branding": {
+    "primary_color": "#2563EB",
+    "primary_color_dark": "#1D4ED8",
+    "accent_color": "#DBEAFE"
+  },
+  "contact": {
+    "nap": {
+      "name": "Bendigo Finance Experts",
+      "street": "123 High Street", 
+      "city": "Bendigo",
+      "state": "VIC",
+      "postcode": "3550",
+      "country": "AU",
+      "phone_display": "03 5432 1234",
+      "phone_raw": "+61354321234" 
+    },
+    "email": "info@financebendigo.com.au",
+    "service_areas": ["Golden Square", "Kangaroo Flat", "Eaglehawk", "Strathdale"], 
+    "opening_hours": [ 
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "17:00"
+      }
+    ],
+    "geo": {
+        "lat": "-36.7578",
+        "long": "144.2794"
+    }
+  },
+  "social": {
+    "facebook": "https://facebook.com/yourpage",
+    "instagram": "https://instagram.com/yourpage",
+    "tiktok": "https://tiktok.com/@yourpage"
+  },
+  "navigation": {
+    "main": [
+      { "name": "Home", "url": "/" },
+      { "name": "Services", "url": "/services/" },
+      { "name": "Locations", "url": "/locations/" },
+      { "name": "About Us", "url": "/about/" }
+    ],
+    "footer_company": [
+      { "name": "About Us", "url": "/about/" },
+      { "name": "Privacy Policy", "url": "/privacy/" },
+      { "name": "Contact Us", "action": "modal" } 
+    ]
+  },
+  "cta": {
+    "primary": "Get a Free Loan Review",
+    "secondary": "Speak to an Expert"
+  },
+   "lead_magnet": {
+      "title": "Free PDF: 5 Mistakes First-Home Buyers Make in Bendigo",
+      "download_file": "/pdfs/bendigo-guide.pdf" 
+    }
+}
