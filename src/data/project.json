@@ -1,4 +1,4 @@
-{
+﻿{
   "company": {
     "name": "Bendigo Finance Experts",
     "tagline": "Your local experts in home, business, and equipment finance.",
@@ -8,12 +8,13 @@
     "name": "FinancialServices",
     "schemaType": "FinancialService",
     "serviceName": "Mortgage Broker",
-    "icon": "fas fa-house-chimney" 
+    "icon": "fas fa-house-chimney"
   },
   "persona": {
     "expert_name": "John Smith",
     "expert_title": "Principal Finance Broker (20+ Years Experience)",
     "expert_bio": "John Smith is a 20-year veteran of the finance industry, fully licensed (MFAA Member #12345) and dedicated to serving the Bendigo community. He specializes in complex lending scenarios and helping first-home buyers navigate the market.",
+    "expert_image": "/images/persona/john-smith.png",  
     "trust_badges": [
       "MFAA Member #12345",
       "ACL No. 389087",
@@ -23,9 +24,9 @@
   },
   "technical": {
     "domain": "https://financebendigo.com.au",
-    "logo_url": "", // Intentionally blank to test icon fallback
-    "lead_form_url": "https://webhook.your-ghl-or-n8n.com/new-lead", 
-    "ga_tracking_id": "G-XXXXXXXXXX" 
+    "logo_url": "",
+    "lead_form_url": "https://formsubmit.co/your-email@example.com",
+    "ga_tracking_id": "G-XXXXXXXXXX"
   },
   "branding": {
     "primary_color": "#2563EB",
@@ -35,17 +36,17 @@
   "contact": {
     "nap": {
       "name": "Bendigo Finance Experts",
-      "street": "123 High Street", 
+      "street": "123 High Street",
       "city": "Bendigo",
       "state": "VIC",
       "postcode": "3550",
       "country": "AU",
       "phone_display": "03 5432 1234",
-      "phone_raw": "+61354321234" 
+      "phone_raw": "+61354321234"
     },
     "email": "info@financebendigo.com.au",
-    "service_areas": ["Golden Square", "Kangaroo Flat", "Eaglehawk", "Strathdale"], 
-    "opening_hours": [ 
+    "service_areas": ["Golden Square", "Kangaroo Flat", "Eaglehawk", "Strathdale"],
+    "opening_hours": [
       {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -68,10 +69,13 @@
       { "name": "Home", "url": "/" },
       { "name": "Services", "url": "/services/" },
       { "name": "Locations", "url": "/locations/" },
-      { "name": "About Us", "url": "/about/" }
+      { "name": "About Us", "url": "/about/" },
+      { "name": "Blog", "url": "/blog/" }
     ],
     "footer_company": [
       { "name": "About Us", "url": "/about/" },
+      { "name": "Locations", "url": "/locations/" },
+      { "name": "Blog", "url": "/blog/" },
       { "name": "Privacy Policy", "url": "/privacy/" },
       { "name": "Contact Us", "action": "modal" } 
     ]
@@ -82,6 +86,6 @@
   },
    "lead_magnet": {
       "title": "Free PDF: 5 Mistakes First-Home Buyers Make in Bendigo",
-      "download_file": "/pdfs/bendigo-guide.pdf" 
+      "download_file": "/pdfs/bendigo-guide.pdf"
     }
 }

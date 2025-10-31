@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import LocationPageLayout from '../layouts/LocationPage.astro';
+
+// 1. Get all location pages
+const allLocations = await getCollection('locations');
+
+// 2. Find the one location designated as the "hub"
+const hubPage = allLocations.find(location => location.data.is_hub === true);
+
+if (!hubPage) {
+  throw new Error(
+    "FATAL: No location hub page found. Please set 'is_hub: true' in one of your 'src/content/locations/' markdown files."
+  );
+}
+
+// 3. Get the content for that hub page
+const { Content } = await hubPage.render();
+---
+<LocationPageLayout frontmatter={hubPage.data} slug={hubPage.slug}>
+  <Content />
+</LocationPageLayout>

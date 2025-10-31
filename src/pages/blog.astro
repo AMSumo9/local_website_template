@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import projectData from '../data/project.json';
+
+// Get all posts and sort them by date, newest first
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Set up page-specific data
+const siteData = projectData;
+const pageData = {
+  title: "Blog | Bendigo Finance Experts",
+  meta_description: "Read the latest news, tips, and insights from the expert finance brokers at Bendigo Finance Experts.",
+  layout: "default"
+};
+---
+<BaseLayout siteData={siteData} pageData={pageData}>
+  
+  <section class="bg-brand-accent">
+    <div class="container mx-auto px-6 py-16 text-center">
+      <h1 class="text-4xl font-extrabold text-[var(--text-primary)] mb-4">
+        Our Latest Insights
+      </h1>
+      <p class="text-lg md:text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">
+        Tips and advice from our local team of finance experts.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-6 max-w-4xl">
+      <div class="space-y-12">
+        
+        {sortedPosts.map(post => (
+          <article class="group">
+            <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-2">
+              <a href={`/blog/${post.slug}/`} class="hover:text-brand-primary transition-colors">
+                {post.data.title}
+              </a>
+            </h2>
+            <div class="text-sm text-[var(--text-secondary)] mb-4 flex flex-wrap gap-x-4 gap-y-2">
+              <span class="flex items-center">
+                <i class="fas fa-calendar mr-2"></i>
+                {post.data.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </span>
+              <span class="flex items-center">
+                <i class="fas fa-user mr-2"></i>
+                {post.data.author}
+              </span>
+              {post.data.read_time && (
+                <span class="flex items-center">
+                  <i class="fas fa-clock mr-2"></i>
+                  {post.data.read_time} min read
+                </span>
+              )}
+            </div>
+            
+            <p class="text-lg text-[var(--text-secondary)] mb-4">
+              {post.data.excerpt || post.data.meta_description}
+            </p>
+            
+            <a href={`/blog/${post.slug}/`} class="font-semibold text-brand-primary hover:text-brand-primary-dark">
+              Read more &rarr;
+            </a>
+            
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="flex flex-wrap gap-2 mt-4">
+                {post.data.tags.map(tag => (
+                  <span class="inline-block bg-brand-accent text-gray-800 px-3 py-1 rounded-full text-sm">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </article>
+        ))}
+
+        {sortedPosts.length === 0 && (
+          <p class="text-center text-lg text-gray-500">
+            No blog posts found. Check back soon!
+          </p>
+        )}
+
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

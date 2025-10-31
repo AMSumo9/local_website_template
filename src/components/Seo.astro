@@ -1,198 +1,244 @@
----
+﻿---
 // src/components/Seo.astro
-// Handles meta tags, canonical, OG, Twitter, and JSON-LD Schema
-import { Organization, WebPage, BreadcrumbList, LocalBusiness, FinancialService, Article, FAQPage, Service } from 'schema-dts'; // Import necessary types
+import {
+  Organization,
+  WebPage,
+  BreadcrumbList,
+  LocalBusiness,
+  FinancialService,
+  BlogPosting,
+  FAQPage,
+  Service
+} from 'schema-dts';
+import { getCollection } from 'astro:content';
 
 export interface Props {
-    data: {
-        site: Record<string, any>;
-        page: Record<string, any>;
-        canonicalUrl: string;
-    }
+  data: {
+    site: Record<string, any>;
+    page: Record<string, any>;
+    canonicalUrl: string;
+  };
 }
 
 const { data } = Astro.props;
 const site = data.site;
 const page = data.page;
 const canonicalUrl = data.canonicalUrl;
+const siteUrl = Astro.site || new URL(Astro.request.url.origin);
 
-// --- Basic Meta ---
+// --- 1. Basic Meta ---
 const title = page?.title || site?.company?.name || 'Website';
 const description = page?.meta_description || site?.company?.tagline || '';
 const author = page?.author || site?.persona?.expert_name || site?.company?.name || '';
-const keywords = page?.meta_keywords || 'finance, loans, broker'; // Add more dynamic logic later
 
-// --- Open Graph & Twitter ---
-const ogType = page?.layout === 'posts' ? 'article' : 'website';
-// Logic for OG/Twitter Image (similar to your dynamic_seo.html)
-let imageUrl = site?.technical?.logo_url || '/og-default.jpg'; // Basic fallback
-if (page?.featured_image) {
-    imageUrl = `/assets/images/blog/${page.featured_image}`; // Adjust path as needed
-} else if (page?.hero_image) {
-	imageUrl = `/assets/images/hero/${page.hero_image}`; // Adjust path as needed
-} else if (page?.layout === 'locations_v2' && page?.city_name) {
-	// Need to check if location image exists, simplified for now
-	const locationImage = `/assets/images/locations/${page.city_name.toLowerCase().replace(/\s+/g, '-')}.png`;
-	// In real Astro, we'd check if `locationImage` exists on the filesystem
-    // For now, assume it might exist or use default.
-    imageUrl = locationImage; // Needs existence check in real implementation
+let keywords = page?.meta_keywords; 
+if (!keywords) {
+  const serviceName = site?.industry?.serviceName || 'finance broker';
+  if (page?.layout === 'posts' && page?.tags?.length > 0) {
+    keywords = page.tags.join(', ');
+  } else if (page?.layout === 'locations_v2' && page?.city_name) {
+    keywords = `${serviceName} ${page.city_name}, ${page.city_name} finance, home loans ${page.city_name}`;
+  } else if (page?.layout === 'services' && page?.service_type) {
+    keywords = `${page.service_type}, ${site.company.name} ${page.service_type}`;
+  } else {
+    keywords = `finance, loans, broker, ${site.company.name}`;
+  }
 }
-// Ensure image URL is absolute
-const absoluteImageUrl = new URL(imageUrl, Astro.site || 'https://example.com').href;
 
+// --- 2. Open Graph & Twitter ---
+const ogType = page?.layout === 'posts' ? 'article' : 'website';
+let imageUrl = '/og-default.jpg'; 
+if (page?.featured_image) {
+  imageUrl = `/images/blog/${page.featured_image}`;
+} else if (page?.hero_image) {
+  imageUrl = `/images/hero/${page.hero_image}`;
+} else if (page?.layout === 'locations_v2') {
+  imageUrl = `/images/locations/default.png`;
+}
+const absoluteImageUrl = new URL(imageUrl, siteUrl).href;
 
-// --- Schema.org JSON-LD Generation ---
-const graph: Array<any> = []; // Use 'any' for flexibility, tighten later if needed
+// --- 3. Schema.org JSON-LD Generation ---
+const graph: Array<any> = [];
 
-// 1. Core Organization/LocalBusiness Schema (Always Present)
+// --- Schema 3a: Organization / LocalBusiness (Always) ---
 const orgSchema: Organization & Partial<LocalBusiness> = {
-    '@type': ['Organization', 'LocalBusiness'], // Base types
-    '@id': `${Astro.site?.href || '/'}#organization`,
-    name: site?.company?.name,
-    url: Astro.site?.href || '/',
-    logo: site?.technical?.logo_url ? new URL(site.technical.logo_url, Astro.site).href : undefined,
-    telephone: site?.contact?.nap?.phone_raw,
-    email: site?.contact?.email, // Assuming email exists in siteData
-    address: {
-        '@type': 'PostalAddress',
-        // streetAddress: site?.contact?.nap?.address?.street, // Add full address later
-        addressLocality: site?.contact?.nap?.address?.city || 'City',
-        addressRegion: site?.contact?.nap?.address?.state || 'State',
-        postalCode: site?.contact?.nap?.address?.postcode || 'Postcode',
-        addressCountry: site?.contact?.nap?.address?.country || 'AU',
-    },
-    sameAs: [
-        site?.social?.facebook,
-        site?.social?.instagram,
-        site?.social?.tiktok,
-    ].filter(Boolean), // Filter out undefined links
-
-    // LocalBusiness specific properties
-    geo: {
-        '@type': 'GeoCoordinates',
-        latitude: page?.geo_lat || site?.contact?.geo?.lat, // Use page first, then site
-        longitude: page?.geo_long || site?.contact?.geo?.long,
-    },
-    areaServed: page?.area_served?.map((area: { name: string; postcode: string }) => ({
-        '@type': 'Place',
-        name: area.name,
-        address: { '@type': 'PostalAddress', postalCode: area.postcode }
-    })) || site?.contact?.service_areas?.map((area: string) => ({ '@type': 'Place', name: area })) || [], // Use page first
-    openingHoursSpecification: site?.contact?.opening_hours // Assumes structure matches schema
+  '@type': ['Organization', 'LocalBusiness'],
+  '@id': `${siteUrl.href}#organization`,
+  name: site?.company?.name,
+  url: siteUrl.href,
+  logo: site?.technical?.logo_url
+    ? new URL(site.technical.logo_url, siteUrl).href
+    : undefined,
+  telephone: site?.contact?.nap?.phone_raw,
+  email: site?.contact?.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site?.contact?.nap?.street,
+    addressLocality: site?.contact?.nap?.city,
+    addressRegion: site?.contact?.nap?.state,
+    postalCode: site?.contact?.nap?.postcode,
+    addressCountry: site?.contact?.nap?.country || 'AU',
+  },
+  sameAs: [
+    site?.social?.facebook,
+    site?.social?.instagram,
+    site?.social?.tiktok,
+  ].filter(Boolean),
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: page?.geo_lat || site?.contact?.geo?.lat,
+    longitude: page?.geo_long || site?.contact?.geo?.long,
+  },
+  areaServed:
+    page?.area_served?.map((area: { name: string; postcode: string }) => ({
+      '@type': 'Place',
+      name: area.name,
+      address: { '@type': 'PostalAddress', postalCode: area.postcode },
+    })) ||
+    site?.contact?.service_areas?.map((area: string) => ({
+      '@type': 'Place',
+      name: area,
+    })) ||
+    [],
+  openingHoursSpecification: site?.contact?.opening_hours,
 };
 
-// Add Industry Specific Type (Plumber, FinancialService etc.)
 if (site?.industry?.schemaType) {
-    if (Array.isArray(orgSchema['@type'])) {
-       orgSchema['@type'].push(site.industry.schemaType as any); // Add specific type
-    }
+  if (Array.isArray(orgSchema['@type'])) {
+    orgSchema['@type'].push(site.industry.schemaType as any);
+  }
 }
-if (site?.industry?.name === 'FinancialServices') {
-     // Add FinancialService specific details if needed
-     (orgSchema as FinancialService).feesAndCommissionsSpecification = "Disclosure available upon request.";
+if (site?.industry?.schemaType === 'FinancialService') {
+  (orgSchema as FinancialService).feesAndCommissionsSpecification =
+    'Fees and commissions are disclosed upon application.';
+}
+
+// --- 4. AGGREGATE RATING LOGIC WITH ERROR HANDLING ---
+try {
+  const allTestimonials = await getCollection('testimonials');
+  const reviewCount = allTestimonials.length;
+  
+  if (reviewCount > 0) {
+    orgSchema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: 5,
+      bestRating: 5,
+      worstRating: 1,
+      reviewCount: reviewCount,
+    };
+  }
+} catch (error) {
+  void console.warn('Testimonials collection not found, skipping aggregate rating');
 }
 
 graph.push(orgSchema);
 
-// 2. WebPage Schema (Always Present)
+// --- Schema 3b: WebPage (Always) ---
 const webPageSchema: WebPage = {
-    '@type': 'WebPage',
-    '@id': canonicalUrl,
-    url: canonicalUrl,
-    name: title,
-    isPartOf: { '@id': orgSchema['@id'] },
-    description: description,
-    inLanguage: 'en-AU', // Or make dynamic
-    primaryImageOfPage: {
-        '@type': 'ImageObject',
-        url: absoluteImageUrl,
-    },
-    ...(page?.last_updated && { dateModified: page.last_updated }) // Add dateModified if available
+  '@type': 'WebPage',
+  '@id': canonicalUrl,
+  url: canonicalUrl,
+  name: title,
+  isPartOf: { '@id': orgSchema['@id'] },
+  description: description,
+  inLanguage: 'en-AU',
+  primaryImageOfPage: {
+    '@type': 'ImageObject',
+    url: absoluteImageUrl,
+  },
+  ...(page?.last_updated && { dateModified: page.last_updated }),
 };
-// Link WebPage to the main Org/LocalBusiness entity
-if (page?.layout === 'locations_v2') { // Specific logic for location pages
-    (webPageSchema as any).mainEntity = { '@id': orgSchema['@id'] };
-}
-
 graph.push(webPageSchema);
 
-// 3. BreadcrumbList Schema (If applicable - based on URL structure)
+// --- Schema 3c: BreadcrumbList ---
 const pathParts = new URL(canonicalUrl).pathname.split('/').filter(Boolean);
-if (pathParts.length > 0 && pathParts[0] !== 'index.html' && !(pathParts.length === 1 && page?.layout === 'default')) { // Basic check to exclude homepage
-    const breadcrumbSchema: BreadcrumbList = {
-        '@type': 'BreadcrumbList',
-        '@id': `${canonicalUrl}#breadcrumb`,
-        itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Home', item: Astro.site?.href || '/' },
-            // Dynamically generate breadcrumbs based on pathParts
-            ...pathParts.map((part, index) => {
-                const url = new URL(pathParts.slice(0, index + 1).join('/') + '/', Astro.site).href;
-                // Attempt to get a nice name (replace slugs, capitalize) - needs refinement
-                let name = part.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                // Use page title for the last item if available and more specific
-                if (index === pathParts.length - 1 && page?.city_name) name = page.city_name;
-                else if (index === pathParts.length - 1 && page?.title) name = page.title.split(' | ')[0]; // Basic title extraction
-
-                return { '@type': 'ListItem', position: index + 2, name: name, item: url };
-            })
-        ]
-    };
-    graph.push(breadcrumbSchema);
+if (pathParts.length > 0) {
+  const breadcrumbSchema: BreadcrumbList = {
+    '@type': 'BreadcrumbList',
+    '@id': `${canonicalUrl}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl.href },
+      ...pathParts.map((part, index) => {
+        const position = index + 2;
+        const partUrl = new URL(
+          pathParts.slice(0, index + 1).join('/') + '/',
+          siteUrl
+        ).href;
+        let name = part.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+        if (position === pathParts.length + 1) {
+          if (page?.city_name) {
+            name = page.city_name; 
+          } else {
+            name = page.title.split(' | ')[0]; 
+          }
+        } else {
+           if (part === 'blog') name = 'Blog';
+           if (part === 'services') name = 'Services';
+           if (part === 'locations') name = 'Locations';
+        }
+        return { '@type': 'ListItem', position, name, item: partUrl };
+      }),
+    ],
+  };
+  graph.push(breadcrumbSchema);
 }
 
-// 4. Content-Specific Schema (Article, FAQPage, Service)
-if (page?.layout === 'posts' || ogType === 'article') {
-    const articleSchema: Article = {
-        '@type': 'Article',
-        '@id': `${canonicalUrl}#article`,
-        headline: page?.title || title,
-        description: description,
-        image: absoluteImageUrl,
-        datePublished: page?.date, // Assuming 'date' in frontmatter
-        dateModified: page?.last_updated || page?.date,
-        author: { '@type': 'Person', name: author },
-        publisher: { '@id': orgSchema['@id'] },
-        mainEntityOfPage: { '@id': canonicalUrl }
-    };
-    graph.push(articleSchema);
+// --- Schema 3d: BlogPosting (Conditional) ---
+if (page?.layout === 'posts') {
+  const articleSchema: BlogPosting = { 
+    '@type': 'BlogPosting',
+    '@id': `${canonicalUrl}#article`,
+    headline: page?.title || title,
+    description: description,
+    image: absoluteImageUrl,
+    datePublished: page?.date, 
+    dateModified: page?.last_updated || page?.date,
+    author: {
+      '@type': 'Person',
+      name: author, 
+    },
+    publisher: { '@id': orgSchema['@id'] }, 
+    mainEntityOfPage: { '@id': canonicalUrl }, 
+  };
+  graph.push(articleSchema);
 }
 
+// --- Schema 3e: FAQPage (Conditional) ---
 if (page?.faqs && Array.isArray(page.faqs) && page.faqs.length > 0) {
-    const faqSchema: FAQPage = {
-        '@type': 'FAQPage',
-        '@id': `${canonicalUrl}#faq`,
-        mainEntity: page.faqs.map(faq => ({
-            '@type': 'Question',
-            name: faq.question,
-            acceptedAnswer: {
-                '@type': 'Answer',
-                text: faq.answer
-            }
-        }))
-    };
-    graph.push(faqSchema);
+  const faqSchema: FAQPage = {
+    '@type': 'FAQPage',
+    '@id': `${canonicalUrl}#faq`,
+    mainEntity: page.faqs.map((faq: { question: string; answer: string }) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+  graph.push(faqSchema);
 }
 
+// --- Schema 3f: Service (Conditional) ---
 if (page?.layout === 'services' && page?.service_type) {
-    const serviceSchema: Service = {
-        '@type': 'Service',
-        '@id': `${canonicalUrl}#service`,
-        serviceType: page.service_type,
-        name: page.title?.split(' | ')[0] || title, // Extract service name
-        description: description,
-        provider: { '@id': orgSchema['@id'] },
-        areaServed: orgSchema.areaServed || [], // Inherit areaServed from main org
-        url: canonicalUrl,
-        // Add potentialOffer or other service properties if available
-    };
-    graph.push(serviceSchema);
+  const serviceSchema: Service = {
+    '@type': 'Service',
+    '@id': `${canonicalUrl}#service`,
+    serviceType: page.service_type, 
+    name: page.title?.split(' | ')[0] || title,
+    description: description,
+    provider: { '@id': orgSchema['@id'] }, 
+    areaServed: orgSchema.areaServed || [], 
+    url: canonicalUrl,
+  };
+  graph.push(serviceSchema);
 }
-
 
 // --- Final Schema Object ---
 const finalSchema = {
-    '@context': 'https://schema.org',
-    '@graph': graph
+  '@context': 'https://schema.org',
+  '@graph': graph,
 };
 ---
 <title>{title}</title>
@@ -201,7 +247,6 @@ const finalSchema = {
 <meta name="author" content={author} />
 <link rel="canonical" href={canonicalUrl} />
 
-<!-- Open Graph -->
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:type" content={ogType} />
@@ -209,13 +254,10 @@ const finalSchema = {
 <meta property="og:image" content={absoluteImageUrl} />
 <meta property="og:site_name" content={site?.company?.name} />
 
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={absoluteImageUrl} />
-<!-- <meta name="twitter:site" content="@YourTwitterHandle"> -->
 
-
-<!-- JSON-LD Schema -->
 <script type="application/ld+json" set:html={JSON.stringify(finalSchema)} />
+

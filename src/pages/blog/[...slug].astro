@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import projectData from '../../data/project.json';
+
+// This function tells Astro which pages to build
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+// Get the specific post for this page
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+// Set up the data for BaseLayout
+const siteData = projectData;
+const pageData = {
+  ...post.data, // Pass all frontmatter data
+  layout: 'posts' // Add layout hint for Seo.astro
+};
+---
+<PostLayout frontmatter={post.data} slug={post.slug}> {/* <-- ADDED slug={post.slug} */}
+  <Content />
+</PostLayout>

@@ -1,27 +1,25 @@
----
+﻿---
 // src/layouts/BaseLayout.astro
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import Seo from '../components/Seo.astro'; // Manages SEO tags and Schema
+import Seo from '../components/Seo.astro';
 import SupportModal from '../components/SupportModal.astro';
+import projectData from '../data/project.json';
 
 // --- Props Definition ---
-// This layout expects data similar to your project.json structure
 export interface Props {
-	siteData: Record<string, any>; // Represents project.json
-	pageData: Record<string, any>; // Represents frontmatter from .md or .astro page
+	siteData: Record<string, any>;
+	pageData: Record<string, any>;
 }
 
-const { siteData, pageData } = Astro.props;
+const { siteData = projectData, pageData } = Astro.props; 
 
-// Combine site and page data for easier access in SEO component
 const seoData = {
 	site: siteData,
 	page: pageData,
-	canonicalUrl: Astro.url.href // Pass the current page's canonical URL
+	canonicalUrl: Astro.url.href
 };
-
-// Extract branding colors for inline styles
+// Variables defined, but CSS uses fallbacks below.
 const primaryColor = siteData?.branding?.primary_color || '#2563EB';
 const primaryDarkColor = siteData?.branding?.primary_color_dark || '#1D4ED8';
 const accentColor = siteData?.branding?.accent_color || '#DBEAFE';
@@ -33,34 +31,30 @@ const accentColor = siteData?.branding?.accent_color || '#DBEAFE';
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 	
-	<!-- SEO Component injects title, meta tags, schema, etc. -->
 	<Seo data={seoData} />
 
-	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 	
-	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-	<!-- Dynamic CSS Variables for Branding -->
-	<style define:vars={{ primaryColor, primaryDarkColor, accentColor }}>
+	<style>
 		:root {
-			--brand-primary-color: var(--primaryColor);
-			--brand-primary-dark-color: var(--primaryDarkColor);
-			--brand-accent-color: var(--accentColor);
+			--brand-primary-color: #2563EB; 
+			--brand-primary-dark-color: #1D4ED8;
+			--brand-accent-color: #DBEAFE;
+			
 			--bg-primary: #ffffff;
 			--bg-secondary: #f9fafb;
 			--text-primary: #1f2937;
 			--text-secondary: #4b5563;
 		}
-		/* Add dark mode variables if needed later */
 
 		body { 
 			font-family: 'Open Sans', 'sans-serif'; 
-			background-color: var(--bg-primary); 
-			color: var(--text-primary); 
+			background-color: var(--bg-primary);
+			color: var(--text-primary);
 		}
 		h1, h2, h3, h4, h5, h6 { 
 			font-family: 'Poppins', 'sans-serif'; 
@@ -78,60 +72,111 @@ const accentColor = siteData?.branding?.accent_color || '#DBEAFE';
 		.faq-question.active + .faq-answer { display: block; }
 		.faq-question.active .faq-icon { transform: rotate(180deg); }
 
-		/* Ensure modal displays correctly */
-		#support-modal.active { display: flex; }
-
-	</style>
+		</style>
 </head>
 <body class="text-gray-800">
 	<Header siteData={siteData} />
 	
 	<main id="main-content">
-		<slot /> <!-- Page content will be injected here -->
+		<slot />
 	</main>
 
 	<Footer siteData={siteData} />
 	<SupportModal siteData={siteData} />
 
-	<!-- Floating Call Button (Mobile Only) -->
 	<a href={`tel:${siteData?.contact?.nap?.phone_raw || '#'}`} 
 	   class="mobile-call-button flex items-center justify-center w-16 h-16 bg-brand-primary text-white rounded-full text-2xl shadow-lg hover:bg-brand-primary-dark transition-colors duration-200 lg:hidden" 
 	   aria-label="Call Now">
 	  <i class="fas fa-phone"></i>
 	</a>
 
-	<script>
-		// --- Modal Functions ---
-		function openSupportModal() {
-		  document.getElementById('support-modal')?.classList.add('active');
-		}
-		function closeSupportModal() {
-		  document.getElementById('support-modal')?.classList.remove('active');
-		}
-		function toggleCallbackForm() {
-		  const form = document.getElementById('callback-form');
-		  const arrow = document.getElementById('callback-arrow');
-		  if (form?.classList.contains('hidden')) {
-			form.classList.remove('hidden');
-			arrow?.style.setProperty('transform', 'rotate(180deg)');
-		  } else {
-			form?.classList.add('hidden');
-			arrow?.style.setProperty('transform', 'rotate(0deg)');
-		  }
-		}
-		// Add event listeners within DOMContentLoaded to ensure elements exist
-		document.addEventListener('DOMContentLoaded', () => {
-			document.getElementById('modal-close')?.addEventListener('click', closeSupportModal);
-			document.addEventListener('keydown', (e) => e.key === 'Escape' && closeSupportModal());
+    <script is:inline>
+    // --- Modal Functions ---
+        function openSupportModal() {
+          const modal = document.getElementById('support-modal');
+          if (modal) {
+              modal.classList.remove('hidden');
+              modal.classList.add('flex');
+              document.body.style.overflow = 'hidden';
+          } else {
+              console.error("Support modal element not found!");
+          }
+        }
+        function closeSupportModal() {
+          const modal = document.getElementById('support-modal');
+          if (modal) {
+              modal.classList.add('hidden');
+              modal.classList.remove('flex');
+              document.body.style.overflow = 'auto';
+          }
+        }
+    function toggleCallbackForm() {
+      const form = document.getElementById('callback-form');
+      const arrow = document.getElementById('callback-arrow');
+      if (form?.classList.contains('hidden')) {
+        form.classList.remove('hidden');
+        arrow?.style.setProperty('transform', 'rotate(180deg)');
+      } else {
+        form?.classList.add('hidden');
+        arrow?.style.setProperty('transform', 'rotate(0deg)');
+      }
+    }
 
-			// Mobile menu toggle
-			const menuButton = document.getElementById('mobile-menu-button');
-			const mobileMenu = document.getElementById('mobile-menu');
-			menuButton?.addEventListener('click', () => {
-				mobileMenu?.classList.toggle('hidden');
-				// Optional: Add ARIA attribute toggling here later
-			});
-		});
-	</script>
+    // --- Add Event Listeners When DOM is Ready ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Buttons to OPEN the modal ---
+        const openModalButtonIds = [
+            'header-open-modal-desktop',
+            'header-open-modal-mobile',
+            'post-sidebar-open-modal',
+            'service-hero-open-modal',
+            'location-cta-open-modal'
+        ];
+
+        openModalButtonIds.forEach(id => {
+            const button = document.getElementById(id);
+            if (button) {
+              button.addEventListener('click', (event) => {
+                    event.preventDefault(); 
+                    openSupportModal();
+                });
+            }
+        });
+
+        // --- Button to CLOSE the modal ---
+        const closeModalButton = document.getElementById('modal-close');
+        if (closeModalButton) {
+          closeModalButton.addEventListener('click', (event) => {
+                 event.preventDefault();
+                 closeSupportModal();
+            });
+        }
+
+         // --- Button to TOGGLE the callback form ---
+        const toggleButton = document.getElementById('callback-toggle');
+        if (toggleButton) {
+          toggleButton.addEventListener('click', (event) => {
+                 event.preventDefault();
+                 toggleCallbackForm();
+            });
+        }
+
+        // --- Close modal on Escape key ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSupportModal();
+            }
+        });
+        // --- Mobile menu toggle ---
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
 </body>
 </html>
+

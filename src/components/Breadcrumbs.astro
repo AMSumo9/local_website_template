@@ -1,0 +1,82 @@
+﻿---
+// src/components/Breadcrumbs.astro
+export interface Props {
+  items: Array<{ name: string; url: string }>;
+}
+
+const { items } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList" class="breadcrumb-list">
+    {items.map((item, index) => (
+      <li 
+        itemprop="itemListElement" 
+        itemscope 
+        itemtype="https://schema.org/ListItem"
+        class="breadcrumb-item"
+      >
+        {index < items.length - 1 ? (
+          <>
+            <a href={item.url} itemprop="item">
+              <span itemprop="name">{item.name}</span>
+            </a>
+            <meta itemprop="position" content={String(index + 1)} />
+            <span class="separator" aria-hidden="true">/</span>
+          </>
+        ) : (
+          <>
+            <span itemprop="name" class="current">{item.name}</span>
+            <meta itemprop="position" content={String(index + 1)} />
+          </>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb-nav {
+    padding: 1rem 0;
+    font-size: 0.875rem;
+      text-align: center;
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+      justify-content: center;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .breadcrumb-item a {
+    color: var(--brand-primary-color, #2563EB);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .breadcrumb-item a:hover {
+    color: var(--brand-primary-dark-color, #1D4ED8);
+    text-decoration: underline;
+  }
+
+  .breadcrumb-item .current {
+    color: var(--text-secondary, #6B7280);
+    font-weight: 500;
+  }
+
+  .separator {
+    color: var(--text-secondary, #6B7280);
+  }
+</style>
+

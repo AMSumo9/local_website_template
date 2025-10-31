@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import ServicePageLayout from '../../layouts/ServicePage.astro';
+import projectData from '../../data/project.json';
+
+// This tells Astro to build a page for every file in 'src/content/services'
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map(service => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+// Get the specific service for this page
+const { service } = Astro.props;
+const { Content } = await service.render();
+
+// Set up the data for BaseLayout
+const siteData = projectData;
+const pageData = {
+  ...service.data, // Pass all frontmatter data
+  layout: 'services' // Add layout hint for Seo.astro
+};
+---
+<ServicePageLayout frontmatter={service.data}>
+  <Content />
+</ServicePageLayout>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://financebendigo.com.au/sitemap-0.xml

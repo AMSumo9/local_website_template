@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import projectData from '../data/project.json';
+
+// 1. Get all service pages from the content collection
+const allServices = await getCollection('services');
+
+// 2. Set up page-specific data
+const siteData = projectData;
+const pageData = {
+  title: "Our Finance Services | Bendigo Finance Experts",
+  meta_description: "Explore our wide range of finance services in Bendigo, including home loans, business loans, and equipment finance.",
+  layout: "default"
+};
+---
+<BaseLayout siteData={siteData} pageData={pageData}>
+  
+  <section class="bg-brand-accent">
+    <div class="container mx-auto px-6 py-16 text-center">
+      <h1 class="text-4xl font-extrabold text-[var(--text-primary)] mb-4">
+        Our Finance Services
+      </h1>
+      <p class="text-lg md:text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">
+        We offer expert advice across a wide range of lending needs. Explore our services below to find the right fit for you.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        {allServices.map(service => (
+          <a href={`/services/${service.slug}/`} class="block bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            {service.data.icon && <i class:list={[service.data.icon, "text-4xl text-brand-primary mb-4"]}></i>}
+            <h3 class="text-2xl font-semibold mb-2 text-[var(--text-primary)]">
+              {service.data.title.split(' | ')[0]}
+            </h3>
+            <p class="text-[var(--text-secondary)] mb-4">
+              {service.data.excerpt}
+            </p>
+            <span class="font-semibold text-brand-primary">
+              Learn More &rarr;
+            </span>
+          </a>
+        ))}
+
+        {allServices.length === 0 && (
+          <p class="text-center text-lg text-gray-500">
+            Services are being updated. Please check back soon.
+          </p>
+        )}
+
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

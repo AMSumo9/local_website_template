@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import LocationPageLayout from '../../layouts/LocationPage.astro';
+
+// This tells Astro to build a page for every file in 'src/content/locations'
+export async function getStaticPaths() {
+  const locations = await getCollection('locations');
+  return locations.map(location => ({
+    params: { slug: location.slug },
+    props: { location },
+  }));
+}
+
+// Get the specific location for this page
+const { location } = Astro.props;
+const { Content } = await location.render();
+---
+<LocationPageLayout frontmatter={location.data} slug={location.slug}>
+  <Content />
+</LocationPageLayout>

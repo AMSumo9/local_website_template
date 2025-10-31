@@ -2,48 +2,51 @@
 // src/pages/index.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
 import projectData from '../data/project.json'; // Import the dummy data for now
-import heroImage from '../assets/images/hero/default-hero.png'; // Example placeholder image
+import heroImage from '../assets/images/hero/default-hero.png';
+// Example placeholder image
 import { Image } from 'astro:assets'; // Import Astro's Image component
 
 // In a real scenario, this data would come from the build process
-const siteData = projectData; 
+const siteData = projectData;
 const pageData = {
 	title: `${siteData.company.name} | ${siteData.company.tagline}`,
-	meta_description: `Compare ${siteData.industry.serviceName} options in ${siteData.contact.nap.address.city}. ${siteData.company.tagline}`,
+	// CORRECTED: Removed .address from city path
+	meta_description: `Compare ${siteData.industry.serviceName} options in ${siteData.contact.nap.city}. ${siteData.company.tagline}`,
 	layout: 'default' // Used by Seo.astro
 };
-
 // Example benefits (would come from project.json or index.md frontmatter)
 const benefits = [
-    { icon: "fas fa-check", title: "Expert Advice", description: "Get guidance from experienced local brokers." },
-    { icon: "fas fa-sync", title: "Compare Lenders", description: "Access rates from dozens of lenders." },
-    { icon: "fas fa-piggy-bank", title: "Save Money", description: "Find competitive rates and save on your loan." }
+    { icon: "fas fa-check", title: "Expert Advice", description: "Get guidance from experienced local brokers."
+ },
+    { icon: "fas fa-sync", title: "Compare Lenders", description: "Access rates from dozens of lenders."
+ },
+    { icon: "fas fa-piggy-bank", title: "Save Money", description: "Find competitive rates and save on your loan."
+ }
 ];
 ---
 <BaseLayout siteData={siteData} pageData={pageData}>
 	
-	<!-- Hero Section -->
 	<section class="bg-brand-accent py-20 md:py-32">
 		<div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
 			<div class="text-center md:text-left">
 				<h1 class="text-4xl md:text-6xl font-extrabold text-[var(--text-primary)] leading-tight mb-4">
-					Expert <span class="text-brand-primary">{siteData.industry.serviceName}</span> Advice in <span class="text-brand-primary">{siteData.contact.nap.address.city}</span>
+					{/* CORRECTED: Removed .address from city path */}
+					Expert <span class="text-brand-primary">{siteData.industry.serviceName}</span> Advice in <span class="text-brand-primary">{siteData.contact.nap.city}</span>
 				</h1>
 				<p class="text-lg text-[var(--text-secondary)] mb-8 max-w-xl mx-auto md:mx-0">
 					{siteData.company.tagline} Compare options from top lenders.
-				</p>
+ </p>
 				<button onclick="openSupportModal()" class="inline-block bg-brand-primary text-white font-bold text-lg px-8 py-4 rounded-lg shadow-xl hover:bg-brand-primary-dark transition-transform duration-300 transform hover:scale-105">
 					{siteData.cta.primary}
 				</button>
 			</div>
 			<div>
-				<!-- Use Astro's Image component for optimization -->
-				<Image src={heroImage} alt={`${siteData.industry.serviceName} in ${siteData.contact.nap.address.city}`} class="rounded-lg shadow-2xl w-full h-auto aspect-[4/3] object-cover" />
+				{/* CORRECTED: Removed .address from city path */}
+				<Image src={heroImage} alt={`${siteData.industry.serviceName} in ${siteData.contact.nap.city}`} class="rounded-lg shadow-2xl w-full h-auto aspect-[4/3] object-cover" />
 			</div>
 		</div>
 	</section>
 
-	<!-- How it Works / Benefits Section -->
 	<section class="py-20 bg-white">
 		<div class="container mx-auto px-6 text-center">
 			<h2 class="text-3xl font-bold mb-12">How It Works</h2>
@@ -61,6 +64,4 @@ const benefits = [
 		</div>
 	</section>
 
-	<!-- Add more sections as needed -->
-
-</BaseLayout>
+	</BaseLayout>

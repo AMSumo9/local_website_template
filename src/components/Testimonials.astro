@@ -1,0 +1,85 @@
+---
+// src/components/Testimonials.astro
+import { getCollection } from 'astro:content';
+
+export interface Props {
+  city_name: string;
+  is_hub: boolean;
+  area_served?: { name: string }[];
+}
+
+const { city_name, is_hub, area_served = [] } = Astro.props;
+
+// 1. Get all testimonials
+const allTestimonials = await getCollection('testimonials');
+
+// 2. Get a list of all areas this hub serves
+const servedAreas = area_served.map(area => area.name);
+
+// 3. Find *all* relevant local testimonials
+const localTestimonials = allTestimonials.filter(t => {
+  const reviewLocation = t.data.location;
+  if (!reviewLocation) return false; // Not a local review
+
+  if (is_hub) {
+    // If this is a hub page (e.g., Bendigo), show reviews for
+    // "Bendigo" AND all its served areas (e.g., "Eaglehawk")
+    return reviewLocation === city_name || servedAreas.includes(reviewLocation);
+  } else {
+    // If this is a spoke page (e.g., Eaglehawk),
+    // show *only* reviews for "Eaglehawk"
+    return reviewLocation === city_name;
+  }
+});
+
+// --- 4. THE HYBRID LOGIC ---
+let testimonialsToShow = [];
+let heading = "";
+
+if (localTestimonials.length > 0) {
+  // --- Case 1: We HAVE local reviews ---
+  testimonialsToShow = localTestimonials;
+  heading = `What Our ${city_name} Clients Say`;
+} else {
+  // --- Case 2: No local reviews, use brand-level fallback ---
+  testimonialsToShow = allTestimonials.filter(t => !t.data.location);
+  heading = "What Our Clients Say"; // Generic heading
+}
+
+// Sort by date, newest first
+testimonialsToShow.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+{testimonialsToShow.length > 0 && (
+  <div class="mb-16">
+    <h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-12">
+      {heading}
+    </h2>
+    <div class="grid md:grid-cols-2 gap-8">
+      {testimonialsToShow.map(t => (
+        <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+
+          {t.data.rating && (
+            <div class="flex items-center mb-2">
+              {Array.from({ length: t.data.rating }, () => (
+                <i class="fas fa-star text-yellow-400"></i>
+              ))}
+              {Array.from({ length: 5 - t.data.rating }, () => (
+                <i class="fas fa-star text-gray-300"></i>
+              ))}
+            </div>
+          )}
+
+          <p class="text-[var(--text-secondary)] italic text-lg mb-4">
+            "{t.data.review}"
+          </p>
+          <p class="text-right font-semibold text-[var(--text-primary)] mt-4">
+            - {t.data.author}
+            {/* Only show location if it exists */}
+            {t.data.location && `, ${t.data.location}`}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}

@@ -1,0 +1,44 @@
+---
+// src/pages/download-thank-you.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import projectData from '../data/project.json';
+
+const siteData = projectData;
+const pageData = {
+  title: "Thank You for Your Download",
+  meta_description: "Your download is ready."
+};
+
+const leadMagnet = siteData.lead_magnet;
+
+if (!leadMagnet?.title || !leadMagnet?.download_file) {
+  // This should almost never happen, but it's a good safeguard
+  return Astro.redirect("/");
+}
+---
+<BaseLayout siteData={siteData} pageData={pageData}>
+  <section class="py-20 md:py-32 bg-white">
+    <div class="container mx-auto px-6 max-w-xl text-center">
+      
+      <i class="fas fa-check-circle text-6xl text-brand-primary mb-6"></i>
+      
+      <h1 class="text-4xl md:text-5xl font-extrabold text-[var(--text-primary)] mb-4">
+        Thank You!
+      </h1>
+      
+      <p class="text-lg text-[var(--text-secondary)] mb-8">
+        Your download, "{leadMagnet.title}", is ready. Click the button below to get your free guide.
+      </p>
+      
+      <a 
+        href={leadMagnet.download_file} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center text-white bg-brand-primary px-8 py-4 rounded-lg font-semibold text-lg transition duration-300 hover:bg-brand-primary-dark shadow-xl"
+      >
+         <i class="fas fa-download mr-2"></i> Download Your Guide
+      </a>
+
+    </div>
+  </section>
+</BaseLayout>
