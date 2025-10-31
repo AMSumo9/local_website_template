@@ -1,4 +1,4 @@
----
+﻿---
 title: "Eaglehawk Mortgage Brokers | Local Finance Experts"
 meta_description: "Expert mortgage brokers in Eaglehawk, Bendigo. We're local specialists for home loans, refinancing, and investment finance in the 3556 area."
 city_name: "Eaglehawk"
@@ -9,6 +9,11 @@ subtitle: "Your local finance specialists in historic Eaglehawk, just minutes fr
 geo_lat: "-36.717"
 geo_long: "144.250"
 last_updated: "2025-10-22"
+
+# === NEW OPTIONAL SCHEMA FIELDS ===
+has_physical_location: false
+show_founder: true
+# === END NEW FIELDS ===
 
 key_benefits:
   - icon: "fas fa-home"

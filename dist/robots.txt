@@ -1,4 +1,17 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://financebendigo.com.au/sitemap-0.xml
+# Sitemap location
+Sitemap: https://financebendigo.com.au/sitemap-index.xml
+
+# Crawl-delay for politeness with search engines
+Crawl-delay: 1
+
+# Disallow private/admin areas if they exist
+Disallow: /admin/
+Disallow: /*.json$
+
+# Allow important directories explicitly
+Allow: /locations/
+Allow: /services/
+Allow: /blog/

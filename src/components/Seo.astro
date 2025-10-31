@@ -8,7 +8,8 @@ import {
   FinancialService,
   BlogPosting,
   FAQPage,
-  Service
+  Service,
+  Person
 } from 'schema-dts';
 import { getCollection } from 'astro:content';
 
@@ -61,7 +62,7 @@ const absoluteImageUrl = new URL(imageUrl, siteUrl).href;
 const graph: Array<any> = [];
 
 // --- Schema 3a: Organization / LocalBusiness (Always) ---
-const orgSchema: Organization & Partial<LocalBusiness> = {
+const orgSchema: Organization & Partial<LocalBusiness> & Partial<FinancialService> = {
   '@type': ['Organization', 'LocalBusiness'],
   '@id': `${siteUrl.href}#organization`,
   name: site?.company?.name,
@@ -103,14 +104,60 @@ const orgSchema: Organization & Partial<LocalBusiness> = {
   openingHoursSpecification: site?.contact?.opening_hours,
 };
 
+// Add industry-specific schema type
 if (site?.industry?.schemaType) {
   if (Array.isArray(orgSchema['@type'])) {
     orgSchema['@type'].push(site.industry.schemaType as any);
   }
 }
+
+// Add FinancialService-specific fields
 if (site?.industry?.schemaType === 'FinancialService') {
   (orgSchema as FinancialService).feesAndCommissionsSpecification =
+    site?.industry?.feesAndCommissionsSpecification || 
     'Fees and commissions are disclosed upon application.';
+}
+
+// OPTIONAL: Physical location map (only if location has physical office)
+// Set has_physical_location: true in location frontmatter to include
+if (page?.has_physical_location) {
+  (orgSchema as LocalBusiness).hasMap = `https://www.google.com/maps/search/?api=1&query=${page.geo_lat},${page.geo_long}`;
+}
+
+// OPTIONAL: Price range for quote-based services
+// Uncomment and customize for services with upfront pricing:
+// if (page?.price_range) {
+//   (orgSchema as LocalBusiness).priceRange = page.price_range; // e.g., "$$", "$50-$200"
+// }
+// For commission-based (default): Use feesAndCommissionsSpecification above
+
+// OPTIONAL: Founder/Expert schema for E-E-A-T
+// Set show_founder: true in frontmatter (or default true from project.json)
+const showFounder = page?.show_founder ?? site?.persona?.show_founder ?? true;
+if (showFounder && site?.persona?.expert_name) {
+  (orgSchema as Organization).founder = {
+    '@type': 'Person',
+    name: site.persona.expert_name,
+    jobTitle: site.persona.job_title || 'Founder & Principal',
+    ...(site.persona.credentials && { 
+      description: site.persona.credentials 
+    }),
+  } as Person;
+}
+
+// ENHANCED: Support multiple images (better for rich results)
+// Accepts single image or array from page frontmatter
+const imageUrls: string[] = [];
+if (page?.images && Array.isArray(page.images)) {
+  // Multiple images provided
+  imageUrls.push(...page.images.map(img => new URL(img, siteUrl).href));
+} else if (page?.hero_image || page?.featured_image) {
+  // Single image - add to array
+  imageUrls.push(absoluteImageUrl);
+}
+
+if (imageUrls.length > 0) {
+  (orgSchema as LocalBusiness).image = imageUrls;
 }
 
 // --- 4. AGGREGATE RATING LOGIC WITH ERROR HANDLING ---
@@ -142,10 +189,10 @@ const webPageSchema: WebPage = {
   isPartOf: { '@id': orgSchema['@id'] },
   description: description,
   inLanguage: 'en-AU',
-  primaryImageOfPage: {
+  primaryImageOfPage: imageUrls.length > 0 ? {
     '@type': 'ImageObject',
-    url: absoluteImageUrl,
-  },
+    url: imageUrls[0],
+  } : undefined,
   ...(page?.last_updated && { dateModified: page.last_updated }),
 };
 graph.push(webPageSchema);
@@ -190,7 +237,7 @@ if (page?.layout === 'posts') {
     '@id': `${canonicalUrl}#article`,
     headline: page?.title || title,
     description: description,
-    image: absoluteImageUrl,
+    image: imageUrls.length > 0 ? imageUrls : absoluteImageUrl,
     datePublished: page?.date, 
     dateModified: page?.last_updated || page?.date,
     author: {
@@ -260,4 +307,3 @@ const finalSchema = {
 <meta name="twitter:image" content={absoluteImageUrl} />
 
 <script type="application/ld+json" set:html={JSON.stringify(finalSchema)} />
-

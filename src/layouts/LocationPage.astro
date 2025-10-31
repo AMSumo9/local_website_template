@@ -7,7 +7,7 @@ import FaqAccordion from '../components/FaqAccordion.astro';
 import AuthorBio from '../components/AuthorBio.astro';
 import Testimonials from '../components/Testimonials.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { Image } from 'astro:assets';
+import { getRelatedPostsForLocation } from '../utils/relatedContent';import { Image } from 'astro:assets';
 import defaultLocationImage from '../assets/images/locations/default.png';
 import projectData from '../data/project.json';
 
@@ -79,6 +79,8 @@ if (!frontmatter.is_hub && slug.includes('/')) {
 
 breadcrumbItems.push({ name: frontmatter.city_name, url: `/locations/${slug}/` });
 
+// Fetch related blog posts for this location
+const relatedPosts = await getRelatedPostsForLocation(frontmatter.city_name, 3);
 ---
 <BaseLayout siteData={siteData} pageData={pageData}>
 
@@ -105,7 +107,7 @@ breadcrumbItems.push({ name: frontmatter.city_name, url: `/locations/${slug}/` }
 
 				<div class="grid md:grid-cols-2 gap-x-12 gap-y-10 mb-16">
 					<div class="self-start">
-						<Image src={imageUrl} alt={imageAlt} class="w-full h-auto rounded-lg shadow-xl object-cover aspect-[4/3]" />
+						<Image src={imageUrl} alt={imageAlt} width={800} height={600} class="w-full h-auto rounded-lg shadow-xl object-cover aspect-[4/3]" />
 					</div>
 					<div class="self-start">
 						<h2 class="text-3xl font-bold text-[var(--text-primary)] mb-6">
@@ -214,6 +216,47 @@ breadcrumbItems.push({ name: frontmatter.city_name, url: `/locations/${slug}/` }
 			</div>
 		</div>
 	</section>
+        <!-- Related Blog Posts Section -->
+        {relatedPosts.length > 0 && (
+          <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-6">
+              <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-8">
+                  Related Articles About <span class="text-brand-primary">{frontmatter.city_name}</span>
+                </h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                  {relatedPosts.map(post => (
+                    <a href={`/blog/${post.slug}/`} class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow overflow-hidden">
+                      {post.data.featured_image && (
+                        <img 
+                          src={`/images/blog/${post.data.featured_image}`} 
+                          alt={post.data.title}
+                          class="w-full h-48 object-cover"
+                        />
+                      )}
+                      <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-[var(--text-primary)]">
+                          {post.data.title.split(' | ')[0]}
+                        </h3>
+                        {post.data.excerpt && (
+                          <p class="text-[var(--text-secondary)] text-sm mb-4">
+                            {post.data.excerpt}
+                          </p>
+                        )}
+                        <span class="text-brand-primary font-semibold text-sm">
+                          Read More →
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
 </BaseLayout>
+
+
 
 
