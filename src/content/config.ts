@@ -69,6 +69,7 @@ const testimonialsCollection = defineCollection({
   schema: z.object({
     author: z.string(), // e.g., "J. & S."
     location: z.string().optional(), // <-- Make 100% sure .optional() is here
+    service: z.string().optional(), // Service type the testimonial is about
     review: z.string(), // The text of the testimonial
     rating: z.number().min(1).max(5).optional(), // 1-5 stars
     date: z.string().transform((str) => new Date(str)).optional(),

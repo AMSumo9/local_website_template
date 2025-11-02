@@ -10,8 +10,8 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 // Set up page-specific data
 const siteData = projectData;
 const pageData = {
-  title: "Blog | Bendigo Finance Experts",
-  meta_description: "Read the latest news, tips, and insights from the expert finance brokers at Bendigo Finance Experts.",
+  title: `Blog | ${siteData.company_name}`,
+  meta_description: `Read the latest news, tips, and insights from the experts at ${siteData.company_name}.`,
   layout: "default"
 };
 ---

@@ -1,13 +1,13 @@
 ---
 layout: ../layouts/PostLayout.astro
 title: "Privacy Policy"
-meta_description: "Read the Privacy Policy for Bendigo Finance Experts. We are committed to protecting your personal information."
+meta_description: "Read our Privacy Policy. We are committed to protecting your personal information."
 date: "2025-10-26"
 ---
 
 ## Our Commitment to Your Privacy
 
-Bendigo Finance Experts ("we", "us", "our") is committed to protecting the privacy and security of your personal information. This policy outlines how we collect, use, disclose, and manage your personal information in accordance with the *Privacy Act 1988* (Cth).
+[YOUR_COMPANY_NAME] ("we", "us", "our") is committed to protecting the privacy and security of your personal information. This policy outlines how we collect, use, disclose, and manage your personal information in accordance with the *Privacy Act 1988* (Cth).
 
 ### Information We Collect
 

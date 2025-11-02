@@ -9,8 +9,8 @@ const allServices = await getCollection('services');
 // 2. Set up page-specific data
 const siteData = projectData;
 const pageData = {
-  title: "Our Finance Services | Bendigo Finance Experts",
-  meta_description: "Explore our wide range of finance services in Bendigo, including home loans, business loans, and equipment finance.",
+  title: `Our Services | ${siteData.company_name}`,
+  meta_description: `Explore our wide range of services from ${siteData.company_name}. Professional, reliable solutions tailored to your needs.`,
   layout: "default"
 };
 ---
