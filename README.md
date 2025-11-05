@@ -1,260 +1,319 @@
-# Template Completion - All Files Ready
+# North Brisbane Mortgage Brokers - Microsite #1
 
-This folder contains everything you need to complete your local business microsite template.
-
----
-
-## 📦 What's Included
-
-### 1. local-microsite-generator.skill ✅
-**What it is:** Complete skill package for Claude
-**What to do:** Upload this file to Claude (Web UI or Desktop)
-**When to use:** Every time you need to generate content for a new site
-**Contains:** 
-- Complete prompt library (locations, services, blog posts, quality control)
-- SEO strategy and content standards
-- Technical features documentation
-- JSON-to-markdown conversion examples
-- Keyword data format
-
-### 2. CONTENT_GENERATION_PROMPTS.md ✅
-**What it is:** Complete prompt library (consolidated from skill)
-**Where it goes:** `_reference/CONTENT_GENERATION_PROMPTS.md` in your template repo
-**What to do:** Copy this file into your `_reference/` directory
-**Use for:** Reference when generating content, or copy/paste prompts directly
-
-### 3. JSON_TO_MD_EXAMPLES.md ✅
-**What it is:** Complete guide for converting JSON output to markdown files
-**Where it goes:** `_reference/JSON_TO_MD_EXAMPLES.md` in your template repo
-**What to do:** Copy this file into your `_reference/` directory
-**Use for:** Converting Claude's JSON output to properly formatted .md files
-
-### 4. KEYWORD_DATA_TEMPLATE.csv ✅
-**What it is:** Example keyword spreadsheet with 15 realistic entries
-**Where it goes:** `_reference/KEYWORD_DATA_TEMPLATE.csv` in your template repo
-**What to do:** Copy this file into your `_reference/` directory
-**Use for:** Template for organizing keyword research for each new site
-
-### 5. DEPLOYMENT_CHECKLIST.md ✅
-**What it is:** Comprehensive deployment checklist (updated with 4 new sections)
-**Where it goes:** `_reference/DEPLOYMENT_CHECKLIST.md` in your template repo
-**What to do:** Copy this file into your `_reference/` directory
-**Use for:** Step-by-step guide for deploying each new site
-**Includes:**
-- Google Business Profile setup
-- Local citations (top 10-15 directories)
-- Google Search Console submission
-- Initial backlinks strategy
-
-### 6. FIXES_NEEDED.md ✅
-**What it is:** Code changes checklist for Claude Code
-**What to do:** Use this in VS Code with Claude Code
-**Contains:**
-- Required fixes (testimonials schema, template cleanup)
-- Optional performance enhancements
-- Testing instructions
-- Git commit workflow
-- Validation checklist
+**Project:** local_website_brisbane_001
+**Region:** North Brisbane
+**Status:** Phase 1 - In Development
+**Launch Target:** Q1 2025
 
 ---
 
-## 🚀 Next Steps
+## 🎯 Project Overview
 
-### Phase 1: Copy Documentation (You - Now)
-1. Open your local template repository
-2. Navigate to the `_reference/` directory
-3. Copy these 4 files into `_reference/`:
-   - `CONTENT_GENERATION_PROMPTS.md`
-   - `JSON_TO_MD_EXAMPLES.md`
-   - `KEYWORD_DATA_TEMPLATE.csv`
-   - `DEPLOYMENT_CHECKLIST.md`
+This is the **first microsite** in a multi-site strategy to dominate mortgage broker searches across Brisbane and Queensland. This site specifically targets **North Brisbane suburbs** with a narrow focus on mortgage broking services.
 
-### Phase 2: Upload Skill (You - Now)
-1. Go to Claude (web or desktop)
-2. Upload `local-microsite-generator.skill`
-3. Test that it triggers when you mention "create location pages"
+### Geographic Coverage
+**Primary Service Area:**
+- North Lakes (110 searches/month @ $24.18 CPC)
+- Chermside (40 searches @ $35.36 CPC)
+- Aspley (90 searches @ $0 CPC - untapped!)
+- Redcliffe (50 searches @ $25.12 CPC)
+- Caboolture (50 searches @ $35.70 CPC)
+- Strathpine, Petrie, Kedron, Nundah, Albany Creek, Stafford
 
-### Phase 3: Fix Code (Claude Code in VS Code - Next)
-1. Open your template repo in VS Code
-2. Connect Claude Code
-3. Share `FIXES_NEEDED.md` with Claude Code
-4. Claude Code will:
-   - Add `service` field to testimonials schema
-   - Search for remaining "Bendigo" references
-   - Test the build
-   - Add optional performance enhancements (if desired)
-   - Commit and push changes
+**Extended Coverage:**
+- Brendale, Mango Hill, Kallangur, Deception Bay
 
----
+### Market Opportunity
+- **Total Monthly Search Volume:** 2,640+ searches
+- **Average CPC:** $26.50
+- **SEO Difficulty:** 14-23 (Low-Medium)
+- **Competition Level:** Low-Medium
+- **Viability Score:** ⭐⭐⭐⭐⭐ (5/5)
 
-## ✅ What's Been Validated
-
-**Skill:**
-- ✅ Packaged successfully
-- ✅ All 8 reference files included
-- ✅ Proper frontmatter structure
-- ✅ Ready to upload
-
-**Documentation:**
-- ✅ Production-ready (no placeholders or TODOs)
-- ✅ Comprehensive examples
-- ✅ Clear, actionable instructions
-- ✅ Consistent with template schema
-
-**Current Template State (From Files You Uploaded):**
-- ✅ SEO implementation excellent (Seo.astro)
-  - Canonical URLs ✅
-  - Open Graph tags ✅
-  - Twitter Cards ✅
-  - Schema markup ✅
-  - Aggregate ratings ✅
-  - Founder schema ✅
-- ✅ robots.txt generation ready
-- ✅ BaseLayout has font preconnect
-- ✅ Config schema mostly complete (just needs `service` field for testimonials)
-
-**What Needs Fixing (Minor):**
-- ⚠️ Add `service` field to testimonials schema (1 line change)
-- ⚠️ Verify no "Bendigo" in template files (search & confirm)
-- ⚠️ Test build (expected to work for code, fail for content)
+### Primary Target Keywords
+1. mortgage broker north brisbane (880 searches, $19.88 CPC)
+2. mortgage broker brisbane north (720 searches, $26.18 CPC)
+3. mortgage broker north lakes (110 searches, $24.18 CPC)
+4. mortgage broker aspley (90 searches, $0 CPC)
+5. mortgage broker chermside (40 searches, $35.36 CPC)
 
 ---
 
-## 📊 File Sizes
+## 🏗️ Technology Stack
+
+- **Framework:** Astro 4.0
+- **Styling:** TailwindCSS 3.4
+- **Language:** TypeScript 5.9
+- **SEO:** Complete schema.org implementation
+- **Build:** Static site generation (SSG)
+
+---
+
+## 📁 Project Structure
 
 ```
-CONTENT_GENERATION_PROMPTS.md    22KB  (Comprehensive prompt library)
-JSON_TO_MD_EXAMPLES.md           20KB  (Complete conversion guide)
-DEPLOYMENT_CHECKLIST.md          17KB  (Full deployment workflow)
-FIXES_NEEDED.md                  8.1KB (Code fixes & validation)
-KEYWORD_DATA_TEMPLATE.csv        1.5KB (15 example keywords)
-local-microsite-generator.skill  18KB  (Complete skill package)
+/
+├── src/
+│   ├── components/         # Reusable UI components
+│   ├── layouts/           # Page templates
+│   ├── pages/             # Routes (dynamic + static)
+│   ├── content/           # Content collections
+│   │   ├── locations/     # North Brisbane suburb pages
+│   │   ├── services/      # Service variations
+│   │   ├── posts/         # Blog articles
+│   │   └── testimonials/  # Client reviews
+│   ├── data/
+│   │   └── project.json   # North Brisbane configuration
+│   └── assets/
+│
+├── _reference/            # Documentation & strategy
+│   ├── BRISBANE_KEYWORD_ANALYSIS.md
+│   ├── MULTI_MICROSITE_STRATEGY_REPORT.md
+│   ├── CONTENT_GENERATION_PROMPTS.md
+│   ├── DEPLOYMENT_CHECKLIST.md
+│   └── KEYWORD_DATA_TEMPLATE.csv
+│
+└── public/
+    └── pdfs/              # Lead magnets
 ```
 
 ---
 
-## 🎯 Success Criteria
+## 🚀 Quick Start
 
-Your template is complete when:
-
-**Documentation:**
-- [x] 4 documentation files created
-- [ ] Files copied to `_reference/` directory
-- [ ] Skill uploaded to Claude
-
-**Code:**
-- [ ] Testimonials schema includes `service` field
-- [ ] No mock location names in template
-- [ ] Build runs without code errors
-- [ ] Changes committed and pushed
-
-**Testing:**
-- [ ] Skill triggers correctly in Claude
-- [ ] Documentation is clear and usable
-- [ ] Template can deploy a new site end-to-end
-
----
-
-## 💡 How to Use the System
-
-### For Each New Site:
-
-1. **Keyword Research** (You)
-   - Use Ahrefs/SEMrush
-   - Fill out keyword spreadsheet
-
-2. **Content Generation** (Claude with Skill)
-   - Start new conversation
-   - Skill auto-loads
-   - Use batch prompts for efficiency
-   - Get JSON output
-
-3. **Convert to Markdown** (You or Script)
-   - Use JSON_TO_MD_EXAMPLES.md as guide
-   - Create .md files in proper directories
-
-4. **Deploy** (Following Checklist)
-   - Update project.json
-   - Add images
-   - Test locally
-   - Deploy to hosting
-   - Follow DEPLOYMENT_CHECKLIST.md
-
-5. **SEO Setup** (First Week)
-   - Google Business Profile
-   - Citations
-   - Search Console
-   - Initial backlinks
-
----
-
-## 📥 Lead Magnet Setup
-
-The template includes an optional lead magnet system for capturing leads with downloadable PDFs.
-
-### To Turn the Lead Magnet ON:
-
-You must provide valid values for these three properties in `src/data/project.json`:
-
-1. **technical.lead_form_url**: Set this to your FormSubmit.co URL (e.g., `"https://formsubit.co/your-email@example.com"`)
-
-2. **lead_magnet.title**: Set this to the public-facing title (e.g., `"Free PDF: 5 Mistakes First-Home Buyers Make"`)
-
-3. **lead_magnet.download_file**: Set this to the public URL path of your PDF (e.g., `"/pdfs/your-guide.pdf"`). This must match the file you placed in `public/pdfs/`
-
-If all three are set, the lead magnet form will automatically appear on post and service pages.
-
-### To Turn the Lead Magnet OFF:
-
-If a specific microsite does not have a lead magnet, simply set the title to an empty string:
-
-```json
-"lead_magnet": {
-  "title": "",
-  "download_file": ""
-}
+### Installation
+```bash
+npm install
 ```
 
-The `LeadMagnet.astro` component will automatically detect this and hide itself from the page.
+### Development
+```bash
+npm run dev
+# Site available at http://localhost:4321
+```
+
+### Build
+```bash
+npm run build
+npm run preview
+```
 
 ---
 
-## 🔧 Troubleshooting
+## 📝 Content Requirements
 
-**If skill doesn't trigger:**
-- Make sure you uploaded the .skill file
-- Try mentioning "local microsite" or "location pages"
-- Check Skills menu in Claude
+### Location Pages (Priority 1)
+Create markdown files in `src/content/locations/` for:
 
-**If build fails with code errors:**
-- Review FIXES_NEEDED.md
-- Make sure schema is correct
-- Check for TypeScript errors
+1. **Hub Page:** `/locations/north-brisbane.md`
+2. **Suburb Pages:**
+   - north-lakes.md (High priority - 110 searches)
+   - chermside.md (High priority - $35 CPC)
+   - aspley.md (High priority - $0 CPC, no competition!)
+   - redcliffe.md
+   - caboolture.md
+   - strathpine.md
+   - petrie.md
+   - kedron.md
+   - nundah.md
+   - albany-creek.md
 
-**If build fails with content errors:**
-- This is EXPECTED for empty content folders
-- Template is ready, just needs content
+### Service Pages (Priority 2)
+Create markdown files in `src/content/services/`:
+
+1. home-loans-north-brisbane.md
+2. first-home-buyers-north-brisbane.md (High volume)
+3. investment-property-loans.md
+4. refinancing-north-brisbane.md (Highest CPC $42-48!)
+5. construction-loans.md
+
+### Blog Content (Priority 3)
+Create in `src/content/posts/`:
+
+- North Brisbane property market updates
+- First home buyer guides
+- Suburb profiles (e.g., "Living in North Lakes: 2025 Guide")
+- Refinancing tips
+- Investment property strategies
 
 ---
 
-## 📞 Summary
+## 🎯 SEO Strategy
 
-You now have:
-1. ✅ Complete skill for content generation
-2. ✅ 4 production-ready documentation files
-3. ✅ Code fixes checklist for final touches
-4. ✅ Validation criteria for completion
-5. ✅ Clear workflow for deploying 50+ sites
+### On-Page Optimization
+- **Homepage:** Target "mortgage broker north brisbane"
+- **Hub Page:** Target "mortgage broker brisbane north"
+- **Suburb Pages:** Target "[suburb] mortgage broker"
+- **Service Pages:** Target "[service] north brisbane"
 
-**Next:** Copy documentation to repo → Upload skill to Claude → Use Claude Code to finish code fixes → Start deploying sites! 🚀
+### Schema Implementation
+All pages include:
+- LocalBusiness schema
+- FinancialService schema
+- BreadcrumbList schema
+- AggregateRating (from testimonials)
+- BlogPosting schema (blog posts)
+- FAQPage schema (where applicable)
+
+### Local SEO
+- Google Business Profile optimized for "Chermside"
+- Service areas: All 15 North Brisbane suburbs
+- NAP consistency across all pages
+- Local citations and directories
 
 ---
 
-## Questions?
+## 🔑 Key Configuration
 
-If you encounter any issues:
-1. Check FIXES_NEEDED.md for common problems
-2. Review the skill's reference files for guidance
-3. Test the workflow with the Bendigo example in `_reference/mock-content/`
+### Update Before Launch
 
-The system is designed to be consistent, scalable, and SEO-optimized from day one.
+**1. Business Details** (`src/data/project.json`):
+- Company ACN and authorised representative number
+- Real phone number and email
+- Actual office address
+- Google Analytics tracking ID
+- FormSubmit.co email for lead capture
+
+**2. Persona/Expert**:
+- Replace "Sarah Thompson" with actual broker name
+- Update bio and credentials
+- Add actual broker photo to `/src/assets/images/persona/`
+
+**3. Domain**:
+- Purchase: northbrisbanemortgagebroker.com.au
+- Or alternative: mortgagebrokernorthbrisbane.com.au
+- Update in project.json
+
+**4. Social Media**:
+- Create Facebook page
+- Create Instagram profile
+- Update URLs in project.json
+
+---
+
+## 📊 Multi-Site Strategy Context
+
+This is **Microsite #1** in a planned network of 8+ mortgage broker microsites:
+
+### Phase 1 Sites (0-3 months)
+1. **North Brisbane** (This site) ⭐⭐⭐⭐⭐
+2. Gold Coast ⭐⭐⭐⭐⭐
+3. Brisbane Central/Inner City ⭐⭐⭐⭐☆
+
+### Phase 2 Sites (3-9 months)
+4. Toowoomba/Darling Downs
+5. Ipswich/West Brisbane
+6. Sunshine Coast
+
+### Phase 3 Sites (9-18 months)
+7. South Brisbane/Logan
+8. East Brisbane/Redlands
+9. Regional QLD (Townsville, Mackay, Cairns)
+
+### Strategic Notes
+- **Geographic overlap is intentional** - multiple sites can target same suburbs with different personas
+- Each site builds brand authority in its region
+- Cross-linking between sites strengthens overall network SEO
+- Different personas/brands avoid duplicate content penalties
+
+---
+
+## 📈 Success Metrics
+
+### Target KPIs (3 months post-launch)
+- **Organic Traffic:** 1,500+ monthly visitors
+- **Keyword Rankings:** Top 3 for "mortgage broker north brisbane"
+- **Lead Generation:** 20-30 qualified leads/month
+- **Conversion Rate:** 3-5% (contact form submissions)
+
+### Expected ROI
+- **Investment:** ~$15,000 (content + setup)
+- **Monthly Revenue Potential:** $12,000-18,000
+- **Payback Period:** 1-2 months
+
+---
+
+## 🛠️ Development Checklist
+
+### Pre-Launch
+- [ ] Update project.json with real business details
+- [ ] Create all location pages (10 suburbs minimum)
+- [ ] Create all service pages (5 services)
+- [ ] Write 10+ blog posts
+- [ ] Add 20+ testimonials
+- [ ] Source/create images for all pages
+- [ ] Create lead magnet PDF
+- [ ] Set up FormSubmit.co email capture
+- [ ] Configure Google Analytics
+- [ ] Test build process
+- [ ] Test all forms and CTAs
+
+### Launch
+- [ ] Deploy to hosting (Netlify/Vercel recommended)
+- [ ] Configure custom domain
+- [ ] Set up Google Business Profile
+- [ ] Submit to Google Search Console
+- [ ] Submit sitemap
+- [ ] Create local citations (top 15 directories)
+- [ ] Set up social media profiles
+- [ ] Install Facebook Pixel (if using ads)
+
+### Post-Launch (First 30 Days)
+- [ ] Monitor Google Search Console for indexing
+- [ ] Track keyword rankings
+- [ ] Set up Google Ads campaign (if applicable)
+- [ ] Generate reviews (target 10+ in first month)
+- [ ] Publish weekly blog content
+- [ ] Build initial backlinks
+- [ ] Monitor lead quality and conversion rates
+
+---
+
+## 📚 Documentation
+
+Comprehensive strategy documents in `_reference/`:
+
+1. **MULTI_MICROSITE_STRATEGY_REPORT.md** - Full 9-site strategy
+2. **BRISBANE_KEYWORD_ANALYSIS.md** - Detailed keyword research
+3. **CONTENT_GENERATION_PROMPTS.md** - Content creation templates
+4. **DEPLOYMENT_CHECKLIST.md** - Launch workflow
+5. **JSON_TO_MD_EXAMPLES.md** - Content formatting guide
+
+---
+
+## 🤝 Next Steps
+
+1. **Content Creation** - Generate location and service pages using prompts in `_reference/`
+2. **Image Sourcing** - Collect images for North Brisbane suburbs
+3. **Lead Magnet** - Create "North Brisbane First Home Buyer's Guide 2025" PDF
+4. **Domain Purchase** - Secure northbrisbanemortgagebroker.com.au
+5. **Google Business** - Create GMB listing for Chermside office
+
+---
+
+## 📞 Technical Support
+
+For template issues or questions:
+- Review documentation in `_reference/` directory
+- Check FIXES_NEEDED.md for common issues
+- Test with: `npm run build`
+
+---
+
+## 🎉 Strategic Advantage
+
+**Why North Brisbane First?**
+- Strong search volume (2,640 monthly searches)
+- Low competition (SEO difficulty 14-23)
+- Aspley = $0 CPC (completely untapped market)
+- High CPCs indicate strong commercial intent
+- Clean geographic identity
+- Perfect testing ground for microsite approach
+
+Once this site is ranking well, the template and strategy can be rapidly deployed to Gold Coast (#2 priority) and other regions.
+
+---
+
+**Last Updated:** November 2025
+**Next Review:** After Phase 1 launch
+**Microsite Status:** Development → Content Creation → Launch → Optimize
