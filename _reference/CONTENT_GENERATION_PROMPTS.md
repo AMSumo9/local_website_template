@@ -4,6 +4,22 @@ Complete prompt library for generating all content types for local business micr
 
 ---
 
+## 🔔 URL Structure Convention
+
+**Service Page Slugs:** Use **LOCATION-FIRST** format for better readability:
+- ✅ CORRECT: `north-brisbane-home-loans`, `north-brisbane-refinancing`, `gold-coast-first-home-buyers`
+- ❌ INCORRECT: `home-loans-north-brisbane`, `refinancing-north-brisbane`, `first-home-buyers-gold-coast`
+
+**Location Page Slugs:** Use suburb/area name only:
+- ✅ CORRECT: `north-lakes`, `chermside`, `aspley`, `north-brisbane` (hub)
+- ❌ INCORRECT: `north-brisbane-north-lakes`, `mortgage-broker-chermside`
+
+**Blog Post Slugs:** Use location-first when applicable:
+- ✅ CORRECT: `north-brisbane-first-home-buyer-guide`, `chermside-property-market-2025`
+- ✅ ALSO OK: `first-home-buyer-guide` (if location-agnostic)
+
+---
+
 ## Table of Contents
 
 1. [Location Pages](#location-pages)
