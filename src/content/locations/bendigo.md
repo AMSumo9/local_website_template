@@ -34,7 +34,8 @@ key_benefits:
     title: "Fast Approvals"
     description: "Streamlined process with most applications approved within 48 hours."
 
-property_insights:
+insights_title: "Bendigo Property Market Overview"
+market_insights:
   - label: "Median House Price"
     value: "$625,000"
     source: "Domain, Dec 2024"

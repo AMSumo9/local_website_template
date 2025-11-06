@@ -17,7 +17,8 @@ const locationsCollection = defineCollection({
     is_hub: z.boolean().optional(),
     area_served: z.array(z.object({ name: z.string(), postcode: z.string() })).optional(),
     key_benefits: z.array(z.object({ icon: z.string(), title: z.string(), description: z.string() })).optional(),
-    property_insights: z.array(z.object({ label: z.string(), value: z.string(), source: z.string().optional() })).optional(),
+    market_insights: z.array(z.object({ label: z.string(), value: z.string(), source: z.string().optional() })).optional(),
+    insights_title: z.string().optional(),
     faqs: z.array(z.object({ question: z.string(), answer: z.string(), source: z.string().optional() })).optional(),
   }),
 });

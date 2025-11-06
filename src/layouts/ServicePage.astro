@@ -93,9 +93,11 @@ displayTitle.replace(frontmatter.hero_highlight, `<span class="text-brand-primar
 				<slot />
 			</article>
       
-      <div class="max-w-4xl mx-auto">
-        <LeadMagnet />
-      </div>
+      {siteData.lead_magnet?.title && (
+        <div class="max-w-4xl mx-auto">
+          <LeadMagnet />
+        </div>
+      )}
 
 		</div>
 	</section>

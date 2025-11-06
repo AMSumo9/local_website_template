@@ -16,6 +16,8 @@ const instagramUrl = siteData?.social?.instagram || '#';
 const tiktokUrl = siteData?.social?.tiktok || '#';
 const footerNav = siteData?.navigation?.footer_company || [];
 const currentYear = new Date().getFullYear();
+const cityName = siteData?.contact?.nap?.city || '';
+const servicesFormat = siteData?.footer?.services_format || 'service_only';
 ---
 <footer class="bg-gray-900 text-white py-12">
   <div class="container mx-auto px-6">
@@ -26,7 +28,7 @@ const currentYear = new Date().getFullYear();
         <p class="text-gray-300 mb-4">{tagline}</p>
         <a href={phoneTel} class="flex items-center text-gray-300 hover:text-white transition duration-200">
           <i class="fas fa-phone mr-3 text-brand-accent"></i>
-          <span>Speak to an Expert</span>
+          <span>Contact Us</span>
          </a>
       </div>
 
@@ -57,13 +59,19 @@ const currentYear = new Date().getFullYear();
       <div>
           <h4 class="text-lg font-semibold mb-4 text-brand-accent">Our Services</h4>
           <ul class="space-y-2">
-            {allServices.map(service => (
-              <li>
-                <a href={`/services/${service.slug}/`} class="text-gray-300 hover:text-white">
-                  {service.data.title.split(' | ')[0]}
-                </a>
-              </li>
-            ))}
+            {allServices.map(service => {
+              const serviceName = service.data.title.split(' | ')[0];
+              const displayName = servicesFormat === 'location_first' && cityName
+                ? `${cityName} ${serviceName}`
+                : serviceName;
+              return (
+                <li>
+                  <a href={`/services/${service.slug}/`} class="text-gray-300 hover:text-white">
+                    {displayName}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
      </div>
     </div>

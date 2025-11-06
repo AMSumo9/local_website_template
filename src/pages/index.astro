@@ -14,15 +14,15 @@ const pageData = {
 	meta_description: `Compare ${siteData.industry.serviceName} options in ${siteData.contact.nap.city}. ${siteData.company.tagline}`,
 	layout: 'default' // Used by Seo.astro
 };
-// Example benefits (would come from project.json or index.md frontmatter)
-const benefits = [
-    { icon: "fas fa-check", title: "Expert Advice", description: "Get guidance from experienced local brokers."
- },
-    { icon: "fas fa-sync", title: "Compare Lenders", description: "Access rates from dozens of lenders."
- },
-    { icon: "fas fa-piggy-bank", title: "Save Money", description: "Find competitive rates and save on your loan."
- }
-];
+// Pull How It Works from project.json configuration
+const howItWorks = siteData.how_it_works || {
+	title: "How It Works",
+	steps: [
+		{ icon: "fas fa-phone", title: "Call Us", description: "Speak directly with an expert in your local area" },
+		{ icon: "fas fa-clock", title: "Quick Response", description: "We respond as quickly as we can to your inquiry" },
+		{ icon: "fas fa-lightbulb", title: "Expert Guidance", description: "We know what we're doing and guide you every step" }
+	]
+};
 ---
 <BaseLayout siteData={siteData} pageData={pageData}>
 	
@@ -49,15 +49,15 @@ const benefits = [
 
 	<section class="py-20 bg-white">
 		<div class="container mx-auto px-6 text-center">
-			<h2 class="text-3xl font-bold mb-12">How It Works</h2>
+			<h2 class="text-3xl font-bold mb-12">{howItWorks.title}</h2>
 			<div class="grid md:grid-cols-3 gap-10">
-				{benefits.map(benefit => (
+				{howItWorks.steps.map(step => (
 					<div class="flex flex-col items-center">
 						<div class="bg-brand-accent p-6 rounded-full mb-4">
-							<i class:list={[benefit.icon, "text-4xl text-brand-primary"]}></i>
+							<i class:list={[step.icon, "text-4xl text-brand-primary"]}></i>
 						</div>
-						<h3 class="text-xl font-bold mb-2">{benefit.title}</h3>
-						<p class="text-[var(--text-secondary)]">{benefit.description}</p>
+						<h3 class="text-xl font-bold mb-2">{step.title}</h3>
+						<p class="text-[var(--text-secondary)]">{step.description}</p>
 					</div>
 				))}
 			</div>

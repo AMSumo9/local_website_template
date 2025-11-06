@@ -115,7 +115,7 @@ const recentPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 							</div>
 						</div>
 
-            <LeadMagnet />
+            {siteData.lead_magnet?.title && <LeadMagnet />}
 
             {relatedPosts.length > 0 && (
               <div class="mt-8 pt-6 border-t border-gray-200">

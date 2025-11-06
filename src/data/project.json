@@ -131,5 +131,45 @@
     "lead_magnet":  {
                         "title":  "Free PDF: 5 Mistakes First-Home Buyers Make in Bendigo",
                         "download_file":  "/pdfs/bendigo-guide.pdf"
-                    }
+                    },
+    "how_it_works":  {
+                         "title":  "How It Works",
+                         "steps":  [
+                                       {
+                                           "icon":  "fas fa-phone",
+                                           "title":  "Call Us",
+                                           "description":  "Speak directly with an expert in your local area"
+                                       },
+                                       {
+                                           "icon":  "fas fa-clock",
+                                           "title":  "Quick Response",
+                                           "description":  "We respond as quickly as we can to your inquiry"
+                                       },
+                                       {
+                                           "icon":  "fas fa-lightbulb",
+                                           "title":  "Expert Guidance",
+                                           "description":  "We know what we're doing and guide you every step"
+                                       }
+                                   ]
+                     },
+    "footer":  {
+                   "services_format":  "location_first"
+               },
+    "disclaimers":  {
+                        "licensed":  true,
+                        "insured":  false,
+                        "certified":  false,
+                        "custom_disclaimer":  ""
+                    },
+    "business_model":  {
+                           "type":  "service_provider",
+                           "description":  "We provide mortgage broking services directly"
+                       },
+    "locale":  {
+                   "country":  "AU",
+                   "language":  "en-AU",
+                   "spelling":  "british",
+                   "date_format":  "DD/MM/YYYY"
+               },
+    "author_strategy":  "individual"
 }

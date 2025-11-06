@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "npm run validate && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "validate": "node scripts/validate-services.cjs",
+    "pre-launch": "node scripts/pre-launch-check.cjs",
+    "check-all": "npm run validate && npm run pre-launch"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",

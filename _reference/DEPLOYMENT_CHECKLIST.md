@@ -1,6 +1,14 @@
-# Deployment Checklist
+# Deployment Checklist (V2)
 
 Complete checklist for deploying a local business microsite from development to live production.
+
+**Version 2 Updates:**
+- Author/E-E-A-T strategy configuration
+- Business model clarification (service provider vs lead generation)
+- Spelling localization checks
+- AI writing hallmarks removal
+- Color scheme guidance
+- Automated validation scripts
 
 ---
 
@@ -55,6 +63,49 @@ Complete checklist for deploying a local business microsite from development to 
   - TikTok profile URL (if applicable)
   - Twitter/X profile URL (if applicable)
 
+### NEW: Author/E-E-A-T Strategy (V2)
+
+- [ ] **Author Strategy Defined**
+  - Chosen strategy: Individual / Company / Team
+  - Read `AUTHOR_SETUP_GUIDE.md` for detailed guidance
+  - If using dummy data, defined consistent persona first
+  - No fabricated credentials or licenses
+
+- [ ] **Individual Person Strategy** (if applicable)
+  - Real, verifiable name collected
+  - Professional credentials documented
+  - Years of experience confirmed
+  - Professional headshot obtained (high-res)
+  - Biographical information written (100-150 words)
+  - Trust badges are accurate and verifiable
+
+- [ ] **Company/Team Strategy** (if applicable)
+  - Company name and year established
+  - Team overview and combined experience
+  - Business licenses and certifications
+  - Company logo or team photo obtained
+  - Corporate trust signals documented
+
+### NEW: Business Model Clarification (V2)
+
+- [ ] **Business Model Defined**
+  - Type: Service Provider / Lead Generation / Referral
+  - Decision documented in project.json
+  - Content strategy aligned with business model
+  - CTA language appropriate for model
+  - Legal disclaimers match model type
+
+### NEW: Color Scheme Selection (V2)
+
+- [ ] **Brand Colors Chosen**
+  - Read `BRANDING_GUIDE.md` for industry guidance
+  - Primary color selected (with reasoning)
+  - Dark variant created (10-20% darker)
+  - Accent color created (80-90% lighter)
+  - Colors tested for contrast (WCAG AA: 4.5:1 minimum)
+  - Colors tested with logo and imagery
+  - Colorblind-friendly (tested with simulator)
+
 ### Keyword Research Completed
 
 - [ ] **Primary Keywords Identified**
@@ -81,10 +132,12 @@ Complete checklist for deploying a local business microsite from development to 
   - Unique content per location
 
 - [ ] **Service Pages**
+  - **V2: Services count is a multiple of 3 (3, 6, 9, etc.) for grid layout**
   - 3-5 service pages written (400-600 words each)
   - Service FAQs included
   - Clear CTAs on each page
   - Process explanations provided
+  - **V2: No template niche references if different niche**
 
 - [ ] **Blog Posts**
   - 10-15 initial blog posts (800-1500 words each)
@@ -199,6 +252,39 @@ Complete checklist for deploying a local business microsite from development to 
 ---
 
 ## Testing & Quality Assurance
+
+### NEW: V2 Automated Validation
+
+- [ ] **Run Validation Scripts**
+  - Run `npm run validate` - Check services count (must be multiple of 3)
+  - Run `npm run pre-launch` - Comprehensive content validation
+  - Run `npm run check-all` - Both validations together
+  - Fix all errors before proceeding
+  - Review and address all warnings
+
+### NEW: V2 Content Quality Checks
+
+- [ ] **AI Writing Hallmarks Removed**
+  - No em dashes (—) in content
+  - No "It's worth noting" or similar AI phrases
+  - No "Navigate the landscape" or flowery metaphors
+  - No "leverage" or "utilize" (use "use" instead)
+  - Read `CONTENT_WRITING_GUIDELINES.md` for full list
+  - Content sounds natural when read aloud
+
+- [ ] **Spelling Consistency**
+  - Locale configured in `project.json` (AU/GB/US)
+  - All content uses consistent regional spelling
+  - British: colour, organise, centre, licence (noun)
+  - American: color, organize, center, license (noun)
+  - Run pre-launch script to catch inconsistencies
+  - Read `SPELLING_GUIDE.md` for reference
+
+- [ ] **Niche Consistency**
+  - No references to "Bendigo" if different city
+  - No references to "Mortgage Broker" if different service
+  - All content matches your actual niche/location
+  - Pre-launch script catches template references
 
 ### Local Testing
 
